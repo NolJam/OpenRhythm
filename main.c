@@ -1,4 +1,10 @@
+#ifndef SDL_DEF
+#define SDL_DEF
+
 #include <SDL2/SDL.h>
+
+#endif
+
 #include "beat.h"
 #include <stdio.h>
 
@@ -77,14 +83,29 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
+	Beat beat1;
+	beat1.x = SCREEN_WIDTH;
+	beat1.y = 300.0f;
+	beat1.sprite.x = beat1.x;
+	beat1.sprite.y = 300.0f;
+	beat1.sprite.w = 64;
+	beat1.sprite.h = 64;
+
 	while (quit == FALSE)
 	{
 		update_delta_time();
 
+		input();
+
+		beat_move(&beat1, 0.1f, delta_time);	
+
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
-		input();
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		SDL_RenderFillRect(renderer, &beat1.sprite);
+
+		SDL_RenderPresent(renderer);
 	}
 
 	SDL_DestroyWindow(window);
