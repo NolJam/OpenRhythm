@@ -20,6 +20,8 @@ Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
 Uint64 delta_time = 0;
 
+float bpm = 120.0f;
+
 unsigned int quit = FALSE;
 
 SDL_Window* window = NULL;
@@ -91,19 +93,26 @@ int main(int argc, char* argv[])
 	beat1.sprite.w = 64;
 	beat1.sprite.h = 64;
 
+	Beat beat2 = beat1;
+	beat2.x *= 2.0f;
+
 	while (quit == FALSE)
 	{
 		update_delta_time();
 
 		input();
 
-		beat_move(&beat1, 0.1f, delta_time);	
+		beat_move(&beat1, (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);	
+		beat_move(&beat2, (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);	
+		// printf("1: %f\n", beat1.x);
+		// printf("2: %f\n", beat2.x);
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderFillRect(renderer, &beat1.sprite);
+		SDL_RenderFillRect(renderer, &beat2.sprite);
 
 		SDL_RenderPresent(renderer);
 	}
