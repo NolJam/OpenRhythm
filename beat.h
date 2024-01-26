@@ -1,9 +1,4 @@
-#ifndef SDL_DEF
-#define SDL_DEF
-
 #include <SDL2/SDL.h>
-
-#endif
 
 #ifndef BEAT_HEADER
 #define BEAT_HEADER

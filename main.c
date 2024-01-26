@@ -1,20 +1,8 @@
-#ifndef SDL_DEF
-#define SDL_DEF
-
 #include <SDL2/SDL.h>
-
-#endif
-
-#include "beat.h"
 #include <stdio.h>
-
-#define FALSE 0
-#define TRUE 1
-
-const int SCREEN_WIDTH = 1024; // 32 32-pix chunks
-const int SCREEN_HEIGHT = 576; // 18 32-pix chunks
-
-const char* BEAT_FORMAT = "b %d\n";
+#include "globals.h"
+#include "beat.h"
+#include "level.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
@@ -26,6 +14,8 @@ unsigned int quit = FALSE;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+
+Level* level = NULL;
 
 void update_delta_time()
 {
@@ -54,9 +44,6 @@ void input()
 
 int main(int argc, char* argv[])
 {
-	Beat beat = { 0, 0 };
-	printf("%f %f\n", beat.x, beat.y);
-
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		printf("SDL could not initialize: %s\n", SDL_GetError());
@@ -85,16 +72,7 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
-	Beat beat1;
-	beat1.x = SCREEN_WIDTH;
-	beat1.y = 300.0f;
-	beat1.sprite.x = beat1.x;
-	beat1.sprite.y = 300.0f;
-	beat1.sprite.w = 64;
-	beat1.sprite.h = 64;
-
-	Beat beat2 = beat1;
-	beat2.x *= 2.0f;
+	level_load(level, "level1.lvl");
 
 	while (quit == FALSE)
 	{
@@ -102,17 +80,20 @@ int main(int argc, char* argv[])
 
 		input();
 
-		beat_move(&beat1, (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);	
-		beat_move(&beat2, (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);	
-		// printf("1: %f\n", beat1.x);
-		// printf("2: %f\n", beat2.x);
+		for (int i = 0; i < level->num_beats; i++)
+		{
+			beat_move(&level->beats[i], (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);
+		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderFillRect(renderer, &beat1.sprite);
-		SDL_RenderFillRect(renderer, &beat2.sprite);
+
+		for (int i = 0; i < level->num_beats; i++)
+		{
+			SDL_RenderFillRect(renderer, &level->beats[i].sprite);
+		}
 
 		SDL_RenderPresent(renderer);
 	}
