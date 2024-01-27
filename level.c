@@ -1,5 +1,8 @@
 #include "level.h"
 
+const char* BEAT_FORMAT = "b %d %f\n";
+const char* BPM_FORMAT = "> %f\n";
+
 void level_load(Level* lvl, char* file_name)
 {
 	FILE* file = fopen(file_name, "r");
@@ -31,8 +34,13 @@ void level_load(Level* lvl, char* file_name)
 
 			int measure = 0;
 			sscanf(line, BEAT_FORMAT, &measure, &lvl->beats[n].x);
-			lvl->beats[n].x += measure;
 			lvl->beats[n].x *= (SCREEN_WIDTH / 4); // assuming 4/4 time sig
+			lvl->beats[n].x += measure * SCREEN_WIDTH;
+			lvl->beats[n].y = 300.0f;
+			lvl->beats[n].sprite.w = 64;
+			lvl->beats[n].sprite.h = 64;
+
+			printf("%f\n", lvl->beats[n].x);
 
 			n++;
 		}
@@ -41,4 +49,10 @@ void level_load(Level* lvl, char* file_name)
 			sscanf(line, BPM_FORMAT, &lvl->bpm);
 		}
 	}
+
+	lvl->num_beats = n;
+	// printf("%d\n", lvl->num_beats);
+	// printf("bpm: %f\n", lvl->bpm);
+
+	fclose(file);
 }

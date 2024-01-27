@@ -1,12 +1,12 @@
+#include <stdio.h>
+#include "globals.h"
+#include "beat.h"
+
 #ifndef LEVEL_DEF
 #define LEVEL_DEF
 
-#include <stdio.h>
-#include "beat.h"
-#include "globals.h"
-
-const char* BEAT_FORMAT = "b %d %f\n";
-const char* BPM_FORMAT = "> %f\n";
+extern const char* BEAT_FORMAT;
+extern const char* BPM_FORMAT;
 
 typedef struct Level {
 	Beat* beats;

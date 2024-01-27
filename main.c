@@ -72,6 +72,12 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
+	level = malloc(sizeof(Level));
+
+	Beat* ptr = malloc(sizeof(Beat));
+	if (ptr == NULL) exit(1);
+	level->beats = ptr;
+
 	level_load(level, "level1.lvl");
 
 	while (quit == FALSE)
@@ -84,6 +90,7 @@ int main(int argc, char* argv[])
 		{
 			beat_move(&level->beats[i], (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);
 		}
+		// printf("%f\n", level->beats[0].x);
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
