@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "beat.h"
 #include "level.h"
+#include "track.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
@@ -16,6 +17,7 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 
 Level* level = NULL;
+Track* track1 = NULL;
 
 void update_delta_time()
 {
@@ -36,6 +38,7 @@ void input()
 		if (e.type == SDL_KEYDOWN)
 			{
 				if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
+				else if (e.key.keysym.sym == SDLK_SPACE) track_press(track1, &level->beats[level->cur_beat]); 
 			}
 
 		else if (e.type == SDL_QUIT) quit = TRUE;
@@ -80,30 +83,49 @@ int main(int argc, char* argv[])
 
 	level_load(level, "level1.lvl");
 
+	Track* ptr2 = malloc(sizeof(Track));
+	if (ptr2 == NULL) exit(1);
+	track1 = ptr2;
+
+	track_init(track1);
+
 	while (quit == FALSE)
 	{
 		update_delta_time();
 
 		input();
 
-		for (int i = 0; i < level->num_beats; i++)
+		if (level->beats[level->cur_beat].x < 0)
+		{
+			level->cur_beat++;
+			printf("cur beat: %d\n\n", level->cur_beat);
+		}	
+
+		for (int i = level->cur_beat; i < level->num_beats; i++)
 		{
 			beat_move(&level->beats[i], (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);
 		}
-		// printf("%f\n", level->beats[0].x);
+		//printf("%f\n", level->beats[0].x);
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
-		for (int i = 0; i < level->num_beats; i++)
+		for (int i = level->cur_beat; i < level->num_beats; i++)
 		{
+			if (level->beats[i].x > SCREEN_WIDTH) continue;
+			if (level->beats[i].x < 0) continue;
+
 			SDL_RenderFillRect(renderer, &level->beats[i].sprite);
 		}
 
+		SDL_RenderFillRect(renderer, &track1->sprite);
+
 		SDL_RenderPresent(renderer);
 	}
+
+	free(level);
 
 	SDL_DestroyWindow(window);
 	SDL_Quit();

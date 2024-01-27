@@ -53,6 +53,7 @@ void level_load(Level* lvl, char* file_name)
 	lvl->num_beats = n;
 	// printf("%d\n", lvl->num_beats);
 	// printf("bpm: %f\n", lvl->bpm);
+	lvl->cur_beat = 0;
 
 	fclose(file);
 }

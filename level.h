@@ -10,6 +10,7 @@ extern const char* BPM_FORMAT;
 
 typedef struct Level {
 	Beat* beats;
+	int cur_beat;
 	int num_beats;
 	float bpm;
 } Level;
