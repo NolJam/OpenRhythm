@@ -14,7 +14,7 @@ typedef struct Track {
 	SDL_Rect sprite;
 } Track;
 
-void track_press(Track* t, Beat* b);
+int track_press(Track* t, Beat* b);
 
 void track_init(Track* t);
 

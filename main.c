@@ -17,7 +17,7 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 
 Level* level = NULL;
-Track* track1 = NULL;
+Track* track1 = NULL; // TODO add tracks to level struct
 
 void update_delta_time()
 {
@@ -38,7 +38,12 @@ void input()
 		if (e.type == SDL_KEYDOWN)
 			{
 				if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
-				else if (e.key.keysym.sym == SDLK_SPACE) track_press(track1, &level->beats[level->cur_beat]); 
+				else if (e.key.keysym.sym == SDLK_SPACE) 
+				{
+					if (track_press(track1, &level->beats[level->cur_beat])) level->cur_beat++; 
+					//printf("cur beat: %d\n\n", level->cur_beat);
+					else printf("no beat hit.\n\n");
+				}
 			}
 
 		else if (e.type == SDL_QUIT) quit = TRUE;
@@ -110,6 +115,9 @@ int main(int argc, char* argv[])
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderFillRect(renderer, &track1->sprite);
+
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
 		for (int i = level->cur_beat; i < level->num_beats; i++)
@@ -119,8 +127,6 @@ int main(int argc, char* argv[])
 
 			SDL_RenderFillRect(renderer, &level->beats[i].sprite);
 		}
-
-		SDL_RenderFillRect(renderer, &track1->sprite);
 
 		SDL_RenderPresent(renderer);
 	}
