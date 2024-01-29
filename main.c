@@ -9,8 +9,6 @@ Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
 Uint64 delta_time = 0;
 
-float bpm = 120.0f;
-
 unsigned int quit = FALSE;
 
 SDL_Window* window = NULL;
@@ -88,6 +86,8 @@ int main(int argc, char* argv[])
 
 	level_load(level, "level1.lvl");
 
+	printf("BPM: %f\n", level->bpm);
+
 	Track* ptr2 = malloc(sizeof(Track));
 	if (ptr2 == NULL) exit(1);
 	track1 = ptr2;
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 
 		for (int i = level->cur_beat; i < level->num_beats; i++)
 		{
-			beat_move(&level->beats[i], (SCREEN_WIDTH / 4000.0f) * (bpm / 60.0f), delta_time);
+			beat_move(&level->beats[i], (SCREEN_WIDTH / 4000.0f) * (level->bpm / 60.0f), delta_time);
 		}
 		//printf("%f\n", level->beats[0].x);
 
