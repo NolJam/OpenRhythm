@@ -3,7 +3,6 @@
 
 #include "globals.h"
 #include "beat.h"
-#include "level.h"
 
 #ifndef TRACK_DEF
 #define TRACK_DEF

@@ -15,7 +15,7 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 
 Level* level = NULL;
-Track* track1 = NULL; // TODO add tracks to level struct
+//Track* track1 = NULL; // TODO add tracks to level struct
 
 void update_delta_time()
 {
@@ -38,7 +38,7 @@ void input()
 				if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
 				else if (e.key.keysym.sym == SDLK_SPACE) 
 				{
-					if (track_press(track1, &level->beats[level->cur_beat])) level->cur_beat++; 
+					if (track_press(&level->tracks[0], &level->beats[level->cur_beat])) level->cur_beat++; 
 					//printf("cur beat: %d\n\n", level->cur_beat);
 					else printf("no beat hit.\n\n");
 				}
@@ -83,16 +83,20 @@ int main(int argc, char* argv[])
 	Beat* ptr = malloc(sizeof(Beat));
 	if (ptr == NULL) exit(1);
 	level->beats = ptr;
+	
+	Track* tptr = malloc(sizeof(Track));
+	if (tptr == NULL) exit(1);
+	level->tracks = tptr;
 
 	level_load(level, "level1.lvl");
 
 	printf("BPM: %f\n", level->bpm);
 
-	Track* ptr2 = malloc(sizeof(Track));
-	if (ptr2 == NULL) exit(1);
-	track1 = ptr2;
+	//Track* ptr2 = malloc(sizeof(Track));
+	//if (ptr2 == NULL) exit(1);
+	//track1 = ptr2;
 
-	track_init(track1);
+	//track_init(track1);
 
 	while (quit == FALSE)
 	{
@@ -116,7 +120,7 @@ int main(int argc, char* argv[])
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &track1->sprite);
+		SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 

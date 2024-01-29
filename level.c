@@ -2,6 +2,7 @@
 
 const char* BEAT_FORMAT = "b %d %f\n";
 const char* BPM_FORMAT = "> %f\n";
+const char* TRACK_FORMAT = "t %d %d\n";
 
 void level_load(Level* lvl, char* file_name)
 {
@@ -47,6 +48,11 @@ void level_load(Level* lvl, char* file_name)
 		else if (line[0] == '>')
 		{
 			sscanf(line, BPM_FORMAT, &lvl->bpm);
+		}
+		else if (line[0] == 't')
+		{
+			//sscanf(line, TRACK_FORMAT, &lvl->tracks[0].x, &lvl->tracks[0].y);
+			track_init(&lvl->tracks[0]);
 		}
 	}
 
