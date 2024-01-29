@@ -1,8 +1,8 @@
 #include "level.h"
 
-const char* BEAT_FORMAT = "b %d %f\n";
+const char* BEAT_FORMAT = "b %d %f %d\n"; // measure, beat in measure, track
 const char* BPM_FORMAT = "> %f\n";
-const char* TRACK_FORMAT = "t %d %d\n";
+const char* TRACK_FORMAT = "t %d %d\n"; // x, y
 
 void level_load(Level* lvl, char* file_name)
 {
@@ -34,10 +34,11 @@ void level_load(Level* lvl, char* file_name)
 			}
 
 			int measure = 0;
-			sscanf(line, BEAT_FORMAT, &measure, &lvl->beats[n].x);
+			int track_marker = 0;
+			sscanf(line, BEAT_FORMAT, &measure, &lvl->beats[n].x, &track_marker);
 			lvl->beats[n].x *= (SCREEN_WIDTH / 4); // assuming 4/4 time sig
 			lvl->beats[n].x += measure * SCREEN_WIDTH;
-			lvl->beats[n].y = 300.0f;
+			lvl->beats[n].y = lvl->tracks[track_marker].y;
 			lvl->beats[n].sprite.w = 64;
 			lvl->beats[n].sprite.h = 64;
 
