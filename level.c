@@ -15,6 +15,7 @@ void level_load(Level* lvl, char* file_name)
 	char line[100];
 	int n = 0;
 	int beat_block = 10;
+	int track_index = 0;
 
 	Beat* ptr = realloc(lvl->beats, (size_t)(beat_block) * sizeof(Beat)); 
 	if (ptr == NULL) exit(1);
@@ -52,8 +53,10 @@ void level_load(Level* lvl, char* file_name)
 		}
 		else if (line[0] == 't')
 		{
-			//sscanf(line, TRACK_FORMAT, &lvl->tracks[0].x, &lvl->tracks[0].y);
-			track_init(&lvl->tracks[0]);
+			int track_x, track_y = 0;
+			sscanf(line, TRACK_FORMAT, &track_x, &track_y);
+			track_init(&lvl->tracks[track_index], track_x, track_y);
+			track_index++;
 		}
 	}
 

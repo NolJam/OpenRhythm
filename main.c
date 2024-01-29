@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include "globals.h"
 #include "beat.h"
@@ -13,9 +14,9 @@ unsigned int quit = FALSE;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+Mix_Music* music = NULL;
 
 Level* level = NULL;
-//Track* track1 = NULL; // TODO add tracks to level struct
 
 void update_delta_time()
 {
@@ -78,13 +79,25 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
+	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+	{
+		printf("mixer couldn't init. error: %s\n", Mix_GetError());
+		exit(1);
+	}
+	music = Mix_LoadMUS("song.mp3");
+	if (music == NULL)
+	{
+		printf("music couldn't be loaded");
+		exit(1);
+	}
+
 	level = malloc(sizeof(Level));
 
 	Beat* ptr = malloc(sizeof(Beat));
 	if (ptr == NULL) exit(1);
 	level->beats = ptr;
 	
-	Track* tptr = malloc(sizeof(Track));
+	Track* tptr = malloc((size_t)5 * sizeof(Track));
 	if (tptr == NULL) exit(1);
 	level->tracks = tptr;
 
@@ -92,12 +105,7 @@ int main(int argc, char* argv[])
 
 	printf("BPM: %f\n", level->bpm);
 
-	//Track* ptr2 = malloc(sizeof(Track));
-	//if (ptr2 == NULL) exit(1);
-	//track1 = ptr2;
-
-	//track_init(track1);
-
+	Mix_PlayMusic(music, 0);
 	while (quit == FALSE)
 	{
 		update_delta_time();
@@ -121,6 +129,7 @@ int main(int argc, char* argv[])
 
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
+		SDL_RenderFillRect(renderer, &level->tracks[1].sprite);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
@@ -137,7 +146,12 @@ int main(int argc, char* argv[])
 
 	free(level);
 
+	Mix_FreeMusic(music);
+	music = NULL;
+
 	SDL_DestroyWindow(window);
+
+	Mix_Quit();
 	SDL_Quit();
 
 	return 0;

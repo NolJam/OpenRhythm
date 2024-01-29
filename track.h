@@ -15,6 +15,6 @@ typedef struct Track {
 
 int track_press(Track* t, Beat* b);
 
-void track_init(Track* t);
+void track_init(Track* t, int x, int y);
 
 #endif

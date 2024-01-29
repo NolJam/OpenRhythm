@@ -10,10 +10,10 @@ int track_press(Track* t, Beat* b)
 	else return FALSE;
 }
 
-void track_init(Track* t)
+void track_init(Track* t, int x, int y)
 {
-	t->x = 0;
-	t->y = 300;
+	t->x = x;
+	t->y = y;
 	t->sprite.x = t->x;
 	t->sprite.y = t->y;
 	t->sprite.w = 64;
