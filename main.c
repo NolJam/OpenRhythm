@@ -79,12 +79,12 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
-	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 512) < 0 )
 	{
 		printf("mixer couldn't init. error: %s\n", Mix_GetError());
 		exit(1);
 	}
-	music = Mix_LoadMUS("song.mp3");
+	music = Mix_LoadMUS("120.wav");
 	if (music == NULL)
 	{
 		printf("music couldn't be loaded");
@@ -105,8 +105,9 @@ int main(int argc, char* argv[])
 
 	printf("BPM: %f\n", level->bpm);
 
-	Mix_PlayMusic(music, 0);
-	while (quit == FALSE)
+	Mix_PlayMusic(music, -1);
+	update_delta_time();
+	while (quit == FALSE && Mix_PlayingMusic() != 0)
 	{
 		update_delta_time();
 
