@@ -1,10 +1,11 @@
 #include "track.h"
 
-int track_press(Track* t, Beat* b)
+int track_press(Track* t)
 {
-	if (b->x - t->x <= t->sprite.w)
+	if (t->beats[t->cur_beat].x - t->x <= t->sprite.w && t->beats[t->cur_beat].y == t->y)
 	{
 		printf("beat hit!\n\n");
+		t->cur_beat++;
 		return TRUE;
 	}
 	else return FALSE;
