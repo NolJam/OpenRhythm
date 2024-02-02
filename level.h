@@ -7,6 +7,7 @@
 #include "track.h"
 
 extern const char* BEAT_FORMAT;
+extern const char* MEASURE_FORMAT;
 extern const char* BPM_FORMAT;
 extern const char* TRACK_FORMAT;
 

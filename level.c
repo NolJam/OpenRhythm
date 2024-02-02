@@ -1,6 +1,7 @@
 #include "level.h"
 
-const char* BEAT_FORMAT = "b %d %d %f\n"; // track, measure, beat in measure
+const char* BEAT_FORMAT = "b %d %f\n"; // track, beat in measure 
+const char* MEASURE_FORMAT = "m %d\n";
 const char* BPM_FORMAT = "> %f\n";
 const char* TRACK_FORMAT = "t %d %d\n"; // x, y
 
@@ -16,6 +17,7 @@ void level_load(Level* lvl, char* file_name)
 	// int n = 0;
 	int beat_block = 10;
 	int track_index = 0;
+	int measure = 0;
 
     for (int i = 0; i < 5; i++)
     {
@@ -48,10 +50,10 @@ void level_load(Level* lvl, char* file_name)
 				lvl->tracks[track_marker].beats = ptr;
 			}
 
-			int measure = 0;
+			//int measure = 0;
 			float b = 0;
 			//int track_marker = 0; // defined earlier
-			sscanf(line, BEAT_FORMAT, &track_marker, &measure, &b);
+			sscanf(line, BEAT_FORMAT, &track_marker, &b);
 			printf("beat value: %f\n", b);
 
 			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x = b;
@@ -67,6 +69,11 @@ void level_load(Level* lvl, char* file_name)
 			printf("%f\n", lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x);
 
 			lvl->tracks[track_marker].num_beats++;
+		}
+		else if (line[0] == 'm')
+		{
+			sscanf(line, MEASURE_FORMAT, &measure);	
+			printf("writing measure: %d\n\n", measure);
 		}
 		else if (line[0] == '>')
 		{
