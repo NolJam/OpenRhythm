@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < 5; i++)
 	{
-        Beat* ptr = malloc(sizeof(Beat));
+        Beat* ptr = calloc(10, sizeof(Beat));
         if (ptr == NULL) exit(1);
         level->tracks[i].beats = ptr;
 		printf("%f\n", level->tracks[i].beats[0].x);

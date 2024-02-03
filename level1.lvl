@@ -2,13 +2,14 @@ t 100 300
 t 100 100
 
 m 1
-b 0 0 // track, measure, beat
+b 0 0 // track, beat
+
 m 2
-b 0 0
+b 1 0
 
 m 3
 b 0 0
-b 1 0
+b 1 2
 
 m 4
 b 0 0
@@ -18,7 +19,6 @@ b 1 0
 
 m 6
 b 0 0
-
 b 1 0
 
 m 8

@@ -27,6 +27,8 @@ void level_load(Level* lvl, char* file_name)
 
         lvl->tracks[i].cur_beat = 0;
 
+		lvl->tracks[i].num_beats = 0;
+
 		lvl->tracks[i].beat_block = 10;
 
 		// printf("index: %d\n", i);
@@ -38,8 +40,9 @@ void level_load(Level* lvl, char* file_name)
 	{
 		if (line[0] == 'b')
 		{
-            int track_marker = line[2] - '0';
-			printf("track marker: %d\n\n", track_marker);
+			int track_marker = 0;
+            // int track_marker = line[2] - '0';
+			// printf("track marker: %d\n\n", track_marker);
 
 			if (lvl->tracks[track_marker].num_beats == lvl->tracks[track_marker].beat_block)
 			{
@@ -55,24 +58,29 @@ void level_load(Level* lvl, char* file_name)
 			//int track_marker = 0; // defined earlier
 			sscanf(line, BEAT_FORMAT, &track_marker, &b);
 			printf("beat value: %f\n", b);
+			printf("track marker: %d\n", track_marker);
 
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x = b;
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x *= (SCREEN_WIDTH / 4); // assuming 4/4 time sig
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x += measure * SCREEN_WIDTH;
+			Beat load_beat;
 
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x += lvl->tracks[track_marker].x;
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].y = lvl->tracks[track_marker].y;
+			load_beat.x = b;
+			load_beat.x *= (SCREEN_WIDTH / 4); // assuming 4/4 time sig
+			load_beat.x += measure * SCREEN_WIDTH;
 
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].sprite.w = 64;
-			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].sprite.h = 64;
+			load_beat.x += lvl->tracks[track_marker].x;
+			load_beat.y = lvl->tracks[track_marker].y;
 
-			printf("%f\n", lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x);
+			load_beat.sprite.w = 64;
+			load_beat.sprite.h = 64;
+
+			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats] = load_beat;
+
+			printf("%f\n\n", lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x);
 
 			lvl->tracks[track_marker].num_beats++;
 		}
 		else if (line[0] == 'm')
 		{
-			sscanf(line, MEASURE_FORMAT, &measure);	
+			sscanf(line, MEASURE_FORMAT, &measure);
 			printf("writing measure: %d\n\n", measure);
 		}
 		else if (line[0] == '>')
