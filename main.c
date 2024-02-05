@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include "globals.h"
 #include "beat.h"
@@ -16,7 +17,35 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mix_Music* music = NULL;
 
+SDL_Texture* up_texture = NULL;
+SDL_Texture* down_texture = NULL;
+
+SDL_Texture* g_textures[5];
+
 Level* level = NULL;
+
+SDL_Texture* texture_load(const char* path)
+{
+	SDL_Texture* new_texture = NULL;
+
+	SDL_Surface* loaded_surface = IMG_Load(path);
+	if (loaded_surface == NULL)
+	{
+		printf("Unable to load surface. Error: %s\n\n", IMG_GetError());
+		exit(1);
+	}
+
+	new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
+	if (new_texture == NULL)
+	{
+		printf("Unable to create texture from surface. Error: %s\n\n", SDL_GetError());
+		exit(1);
+	}
+
+	SDL_FreeSurface(loaded_surface);
+
+	return new_texture;
+}
 
 void update_delta_time()
 {
@@ -85,6 +114,20 @@ int main(int argc, char* argv[])
 
 	printf("Renderer driver: %s\n", r_info.name);
 
+	// IMG
+	int img_flags = IMG_INIT_PNG;
+	if (!(IMG_Init(img_flags) & img_flags))
+	{
+		printf("SDL_Image could not be initialized. Error: %s\n\n", IMG_GetError());
+		exit(1);
+	}
+
+	up_texture = texture_load("up.png");
+	down_texture = texture_load("down.png");
+	g_textures[0] = up_texture;
+	g_textures[1] = down_texture;
+
+	// MIX
 	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 512) < 0 )
 	{
 		printf("mixer couldn't init. error: %s\n", Mix_GetError());
@@ -97,22 +140,15 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
+	// LEVEL
 	level = malloc(sizeof(Level));
-
-//	Beat* ptr = malloc(sizeof(Beat));
-//	if (ptr == NULL) exit(1);
-//	level->beats = ptr;
-
-	// Track* tptr = malloc((size_t)5 * sizeof(Track));
-	// if (tptr == NULL) exit(1);
-	// level->tracks = tptr;
 
 	for (int i = 0; i < 5; i++)
 	{
         Beat* ptr = calloc(10, sizeof(Beat));
         if (ptr == NULL) exit(1);
         level->tracks[i].beats = ptr;
-		printf("%f\n", level->tracks[i].beats[0].x);
+	printf("%f\n", level->tracks[i].beats[0].x);
 	}
 
 	level_load(level, "level1.lvl");
@@ -121,7 +157,7 @@ int main(int argc, char* argv[])
 
 	Mix_PlayMusic(music, 0);
 	update_delta_time();
-	while (quit == FALSE && Mix_PlayingMusic() != 0)
+	while (quit == FALSE)
 	{
 		update_delta_time();
 
@@ -151,7 +187,7 @@ int main(int argc, char* argv[])
 		SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
 		SDL_RenderFillRect(renderer, &level->tracks[1].sprite);
 
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
 		for (int i = 0; i < level->num_tracks; i++)
 		{
@@ -160,17 +196,10 @@ int main(int argc, char* argv[])
 				if (level->tracks[i].beats[j].x > SCREEN_WIDTH) continue;
 				if (level->tracks[i].beats[j].x < 0) continue;
 
-				SDL_RenderFillRect(renderer, &level->tracks[i].beats[j].sprite);
+				//SDL_RenderFillRect(renderer, &level->tracks[i].beats[j].sprite);
+				SDL_RenderCopy(renderer, g_textures[i], NULL, &level->tracks[i].beats[j].sprite);
 			}
 		}
-
-		// for (int i = level->cur_beat; i < level->num_beats; i++)
-		// {
-		// 	if (level->beats[i].x > SCREEN_WIDTH) continue;
-		// 	if (level->beats[i].x < 0) continue;
-
-		// 	SDL_RenderFillRect(renderer, &level->beats[i].sprite);
-		// }
 
 		SDL_RenderPresent(renderer);
 	}
@@ -180,8 +209,14 @@ int main(int argc, char* argv[])
 	Mix_FreeMusic(music);
 	music = NULL;
 
+	SDL_DestroyTexture(up_texture);
+	up_texture = NULL;
+	SDL_DestroyTexture(down_texture);
+	down_texture = NULL;
+
 	SDL_DestroyWindow(window);
 
+	IMG_Quit();
 	Mix_Quit();
 	SDL_Quit();
 
