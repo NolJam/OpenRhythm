@@ -20,8 +20,6 @@ Mix_Music* music = NULL;
 SDL_Texture* up_texture = NULL;
 SDL_Texture* down_texture = NULL;
 
-SDL_Texture* g_textures[5];
-
 Level* level = NULL;
 
 SDL_Texture* texture_load(const char* path)
@@ -112,7 +110,7 @@ int main(int argc, char* argv[])
 		quit = TRUE;
 	}
 
-	printf("Renderer driver: %s\n", r_info.name);
+	printf("Renderer driver: %s\n\n", r_info.name);
 
 	// IMG
 	int img_flags = IMG_INIT_PNG;
@@ -124,8 +122,11 @@ int main(int argc, char* argv[])
 
 	up_texture = texture_load("up.png");
 	down_texture = texture_load("down.png");
-	g_textures[0] = up_texture;
-	g_textures[1] = down_texture;
+
+	SDL_Texture* beat_textures[2];
+	beat_textures[0] = up_texture;
+	beat_textures[1] = down_texture;
+	printf("textures loaded.\n\n");
 
 	// MIX
 	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 512) < 0 )
@@ -153,31 +154,34 @@ int main(int argc, char* argv[])
 
 	level_load(level, "level1.lvl");
 
-	printf("BPM: %f\n", level->bpm);
+	printf("BPM: %f\n\n", level->bpm);
 
 	Mix_PlayMusic(music, 0);
 	update_delta_time();
+	printf("update loop starting.\n\n");
 	while (quit == FALSE)
 	{
 		update_delta_time();
 
 		input();
 
-        for (int i = 0; i < level->num_tracks; i++)
-        {
-            if (level->tracks[i].beats[level->tracks[i].cur_beat].x < level->tracks[0].x - level->tracks[0].sprite.w &&
+        	for (int i = 0; i < level->num_tracks; i++)
+        	{
+            		if (level->tracks[i].beats[level->tracks[i].cur_beat].x < level->tracks[0].x - level->tracks[0].sprite.w &&
 					level->tracks[i].cur_beat < level->tracks[i].num_beats)
-            {
-                level->tracks[i].cur_beat++;
-                printf("beat missed\n\n");
-            }
-        }
+            		{
+                		level->tracks[i].cur_beat++;
+                		printf("beat missed\n\n");
+            		}
+        	}
+		//printf("beats' positions tracked\n\n");
 
 		for (int i = 0; i < level->num_tracks; i++)
 		{
-            for (int j = level->tracks[i].cur_beat; j < level->tracks[i].num_beats; j++)
-                beat_move(&level->tracks[i].beats[j], level->speed, delta_time);
+            		for (int j = level->tracks[i].cur_beat; j < level->tracks[i].num_beats; j++)
+                	beat_move(&level->tracks[i].beats[j], level->speed, delta_time);
 		}
+		//printf("beats moved\n\n");
 		//printf("%f\n", level->beats[0].x);
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
@@ -186,6 +190,7 @@ int main(int argc, char* argv[])
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
 		SDL_RenderFillRect(renderer, &level->tracks[1].sprite);
+		//printf("track sprites drawn.\n\n");
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
@@ -196,8 +201,8 @@ int main(int argc, char* argv[])
 				if (level->tracks[i].beats[j].x > SCREEN_WIDTH) continue;
 				if (level->tracks[i].beats[j].x < 0) continue;
 
-				//SDL_RenderFillRect(renderer, &level->tracks[i].beats[j].sprite);
-				SDL_RenderCopy(renderer, g_textures[i], NULL, &level->tracks[i].beats[j].sprite);
+				//printf("attempting render copy\n\n");
+				SDL_RenderCopy(renderer, beat_textures[i], NULL, &level->tracks[i].beats[j].sprite);
 			}
 		}
 
