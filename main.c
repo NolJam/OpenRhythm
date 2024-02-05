@@ -13,6 +13,8 @@ Uint64 delta_time = 0;
 
 unsigned int quit = FALSE;
 
+float vel = 0.0f;
+
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mix_Music* music = NULL;
@@ -176,10 +178,13 @@ int main(int argc, char* argv[])
         	}
 		//printf("beats' positions tracked\n\n");
 
+		vel =  level->speed * delta_time;
 		for (int i = 0; i < level->num_tracks; i++)
 		{
             		for (int j = level->tracks[i].cur_beat; j < level->tracks[i].num_beats; j++)
-                	beat_move(&level->tracks[i].beats[j], level->speed, delta_time);
+			{
+                		beat_move(&level->tracks[i].beats[j], vel);
+			}
 		}
 		//printf("beats moved\n\n");
 		//printf("%f\n", level->beats[0].x);

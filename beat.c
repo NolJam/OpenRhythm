@@ -1,10 +1,10 @@
 #include "beat.h"
 
-void beat_move(Beat* b, const float speed, Uint64 dt)
+void beat_move(Beat* b, const float speed)
 {
 	if (b->x < -100.0f) return;
 
-	b->x -= speed * dt;
+	b->x -= speed;
 	b->sprite.x = b->x;
 	b->sprite.y = b->y;
 }

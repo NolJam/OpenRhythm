@@ -9,6 +9,6 @@ typedef struct Beat {
 	SDL_Rect sprite;
 } Beat;
 
-void beat_move(Beat* b, const float speed, Uint64 dt);
+void beat_move(Beat* b, const float speed);
 
 #endif
