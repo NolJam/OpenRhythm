@@ -24,25 +24,27 @@ SDL_Texture* down_texture = NULL;
 
 Level* level = NULL;
 
-SDL_Texture* texture_load(const char* path)
+SDL_Texture* texture_load(SDL_Renderer* r, const char* path)
 {
-	SDL_Texture* new_texture = NULL;
-
-	SDL_Surface* loaded_surface = IMG_Load(path);
-	if (loaded_surface == NULL)
-	{
-		printf("Unable to load surface. Error: %s\n\n", IMG_GetError());
-		exit(1);
-	}
-
-	new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
+	SDL_Texture* new_texture = SDL_CreateTexture(r, 376840196, 0, 16, 16);
 	if (new_texture == NULL)
 	{
-		printf("Unable to create texture from surface. Error: %s\n\n", SDL_GetError());
+		printf("New Texture could not be created: %s\n", SDL_GetError());
 		exit(1);
 	}
 
-	SDL_FreeSurface(loaded_surface);
+	new_texture = IMG_LoadTexture(r, path);
+
+	Uint32 format;
+	int access;
+	SDL_QueryTexture(new_texture, &format, &access, NULL, NULL);
+	printf("%d\n%d\n\n", format, access);
+
+	if (new_texture == NULL)
+	{
+		printf("Texture couldn't be loaded. Error: %s\n\n", IMG_GetError());
+		exit(1);
+	}
 
 	return new_texture;
 }
@@ -102,7 +104,7 @@ int main(int argc, char* argv[])
 
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	SDL_RendererInfo r_info;
 	SDL_GetRendererInfo(renderer, &r_info);
 
@@ -122,12 +124,8 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	up_texture = texture_load("up.png");
-	down_texture = texture_load("down.png");
-
-	SDL_Texture* beat_textures[2];
-	beat_textures[0] = up_texture;
-	beat_textures[1] = down_texture;
+	up_texture = texture_load(renderer, "up.png");
+	down_texture = texture_load(renderer, "down.png");
 	printf("textures loaded.\n\n");
 
 	// MIX
@@ -207,7 +205,7 @@ int main(int argc, char* argv[])
 				if (level->tracks[i].beats[j].x < 0) continue;
 
 				//printf("attempting render copy\n\n");
-				SDL_RenderCopy(renderer, beat_textures[i], NULL, &level->tracks[i].beats[j].sprite);
+				SDL_RenderCopy(renderer, up_texture, NULL, &level->tracks[i].beats[j].sprite);
 			}
 		}
 
@@ -216,6 +214,7 @@ int main(int argc, char* argv[])
 
 	free(level);
 
+	Mix_CloseAudio();
 	Mix_FreeMusic(music);
 	music = NULL;
 
@@ -225,6 +224,7 @@ int main(int argc, char* argv[])
 	down_texture = NULL;
 
 	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer);
 
 	IMG_Quit();
 	Mix_Quit();
