@@ -21,6 +21,9 @@ Mix_Music* music = NULL;
 
 SDL_Texture* up_texture = NULL;
 SDL_Texture* down_texture = NULL;
+SDL_Texture* beat_textures[2];
+
+SDL_Texture* t_tx1 = NULL;
 
 Level* level = NULL;
 
@@ -125,7 +128,12 @@ int main(int argc, char* argv[])
 	}
 
 	up_texture = texture_load(renderer, "up.png");
+	beat_textures[0] = up_texture;
 	down_texture = texture_load(renderer, "down.png");
+	beat_textures[1] = down_texture;
+
+	t_tx1 = texture_load(renderer, "track1.png");
+
 	printf("textures loaded.\n\n");
 
 	// MIX
@@ -190,12 +198,15 @@ int main(int argc, char* argv[])
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 		SDL_RenderClear(renderer);
 
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
-		SDL_RenderFillRect(renderer, &level->tracks[1].sprite);
+		//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		//SDL_RenderFillRect(renderer, &level->tracks[0].sprite);
+		//SDL_RenderFillRect(renderer, &level->tracks[1].sprite);
 		//printf("track sprites drawn.\n\n");
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[0].sprite);
+		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[1].sprite);
 
 		for (int i = 0; i < level->num_tracks; i++)
 		{
@@ -205,7 +216,7 @@ int main(int argc, char* argv[])
 				if (level->tracks[i].beats[j].x < 0) continue;
 
 				//printf("attempting render copy\n\n");
-				SDL_RenderCopy(renderer, up_texture, NULL, &level->tracks[i].beats[j].sprite);
+				SDL_RenderCopy(renderer, beat_textures[i], NULL, &level->tracks[i].beats[j].sprite);
 			}
 		}
 

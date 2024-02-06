@@ -68,7 +68,7 @@ void level_load(Level* lvl, char* file_name)
 			load_beat.x += measure * SCREEN_WIDTH;
 
 			load_beat.x += lvl->tracks[track_marker].x;
-			load_beat.y = lvl->tracks[track_marker].y;
+			load_beat.y = lvl->tracks[track_marker].y + 8;
 
 			load_beat.sprite.w = 64;
 			load_beat.sprite.h = 64;
