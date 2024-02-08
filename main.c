@@ -11,6 +11,10 @@ Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
 Uint64 delta_time = 0;
 
+double last_music_pos = 0.0;
+double cur_music_pos = 0.0;
+double music_delta = 0.0;
+
 unsigned int quit = FALSE;
 
 float vel = 0.0f;
@@ -60,7 +64,17 @@ void update_delta_time()
 
         // if (delta_time > MAX_DT) delta_time = MAX_DT;
 
-        if (delta_time < 6) SDL_Delay(6 - delta_time);
+        if (delta_time < 8) SDL_Delay(8 - delta_time);
+}
+
+void update_music_delta()
+{
+	if (Mix_PlayingMusic() == 0) return;
+	
+	last_music_pos = cur_music_pos;
+	cur_music_pos = Mix_GetMusicPosition(music);
+
+	music_delta = cur_music_pos - last_music_pos;
 }
 
 void input()
@@ -170,6 +184,7 @@ int main(int argc, char* argv[])
 	while (quit == FALSE)
 	{
 		update_delta_time();
+		update_music_delta();
 
 		input();
 
@@ -184,7 +199,8 @@ int main(int argc, char* argv[])
         	}
 		//printf("beats' positions tracked\n\n");
 
-		vel =  level->speed * delta_time;
+		vel =  level->speed * music_delta;
+		//printf("music delta: %f\n\n", music_delta);
 		for (int i = 0; i < level->num_tracks; i++)
 		{
             		for (int j = level->tracks[i].cur_beat; j < level->tracks[i].num_beats; j++)
