@@ -19,6 +19,9 @@ unsigned int quit = FALSE;
 
 float vel = 0.0f;
 
+int cur_screen_w = 1024;
+int cur_screen_h = 576;
+
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mix_Music* music = NULL;
@@ -77,6 +80,15 @@ void update_music_delta()
 	music_delta = cur_music_pos - last_music_pos;
 }
 
+void resize_screen() 
+{
+	SDL_GetWindowSize(window, &cur_screen_w, &cur_screen_h);
+	//printf("window width: %d\nwindow height: %d\n", cur_screen_w, cur_screen_h);
+	cur_screen_w = (cur_screen_h / 9) * 16;
+	SDL_RenderSetLogicalSize(renderer, cur_screen_w, cur_screen_h);
+	SDL_RenderSetScale(renderer, (float)cur_screen_w / (float)SCREEN_WIDTH, (float)cur_screen_h / (float)SCREEN_HEIGHT);
+}
+
 void input()
 {
 	SDL_Event e;
@@ -99,6 +111,10 @@ void input()
 
 				}
 			}
+		else if (e.type == SDL_WINDOWEVENT)
+		{
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.type == SDL_WINDOWEVENT_SIZE_CHANGED) resize_screen();
+		}
 		else if (e.type == SDL_QUIT) quit = TRUE;
 	}
 }
@@ -111,7 +127,8 @@ int main(int argc, char* argv[])
 		quit = TRUE;
 	}
 
-	window = SDL_CreateWindow("Rhythm Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Rhythm Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	if (window == NULL)
 	{
