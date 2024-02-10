@@ -84,7 +84,7 @@ void resize_screen()
 {
 	SDL_GetWindowSize(window, &cur_screen_w, &cur_screen_h);
 	//printf("window width: %d\nwindow height: %d\n", cur_screen_w, cur_screen_h);
-	cur_screen_w = (cur_screen_h / 9) * 16;
+	//cur_screen_w = (cur_screen_h / 9) * 16;
 	SDL_RenderSetLogicalSize(renderer, cur_screen_w, cur_screen_h);
 	SDL_RenderSetScale(renderer, (float)cur_screen_w / (float)SCREEN_WIDTH, (float)cur_screen_h / (float)SCREEN_HEIGHT);
 }
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
         	}
 		//printf("beats' positions tracked\n\n");
 
-		vel =  level->speed * music_delta;
+		vel =  level->speed * delta_time;
 		//printf("music delta: %f\n\n", music_delta);
 		for (int i = 0; i < level->num_tracks; i++)
 		{

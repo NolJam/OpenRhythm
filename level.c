@@ -102,7 +102,7 @@ void level_load(Level* lvl, char* file_name)
 	// printf("bpm: %f\n", lvl->bpm);
 	//lvl->cur_beat = 0;
 
-	lvl->speed = (SCREEN_WIDTH / 4.0f) * (lvl->bpm / 60.0f);
+	lvl->speed = (SCREEN_WIDTH / 4000.0f) * (lvl->bpm / 60.0f);
 
 	lvl->num_tracks = track_index;
 
