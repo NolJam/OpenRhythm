@@ -1,5 +1,5 @@
-#ifndef TEXT_HEADER
-#define TEXT_HEADER
+#ifndef MENU_HEADER
+#define MENU_HEADER
 
 #include <string.h>
 #include <SDL2/SDL.h>
@@ -32,13 +32,11 @@ Menu pause_menu;
 
 extern Menu* menus[3]; // [ NULL, main_menu, pause_menu ] mapped to global GameState enum values
 
-void menu_init(); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
-
-void pause(); // maybe put this in main.c instead
-
 void capitalize(char* s);
 
-void map_font_texture(char* c, Letter* letter);
+void map_letter_coords(char* s, Letter* letters);
+
+void menu_init(); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
 
 void menu_render(SDL_Renderer* renderer, Menu* menu);
 
