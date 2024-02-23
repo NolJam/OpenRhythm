@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 		quit = TRUE;
 	}
 
-	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+	//SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	SDL_RendererInfo r_info;
@@ -204,22 +204,21 @@ int main(int argc, char* argv[])
 	update_delta_time();
 	printf("update loop starting.\n\n");
 	printf("makefile test\n\n");
+
+	menu_render(renderer);
+
 	while (quit == FALSE)
 	{
 		update_delta_time();
 		update_music_delta();
 
+		input();
+
 		if (state == MAIN_MENU)
 		{
 			menu_render(renderer);
-			//printf("main menu rendered\n\n");
-
-			input();
-
 			continue;
 		}
-
-		input();
 
         	for (int i = 0; i < level->num_tracks; i++)
         	{

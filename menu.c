@@ -88,8 +88,9 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 
 void menu_render(SDL_Renderer* renderer)
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
+	printf("menu rendering...\n");
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
@@ -99,10 +100,13 @@ void menu_render(SDL_Renderer* renderer)
 
 		menu_render_letters(renderer, &main_menu.menu_items[i]);
 	}
+	
+	SDL_RenderPresent(renderer);
 }
 
 void menu_quit()
 {
-	free(play_button.letters);
-	free(main_menu.menu_items);
+	//free(play_button.letters);
+	main_menu.menu_items = NULL;
+	//free(main_menu.menu_items);
 }
