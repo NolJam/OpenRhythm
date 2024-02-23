@@ -198,6 +198,7 @@ int main(int argc, char* argv[])
 	Mix_PlayMusic(music, 0);
 	update_delta_time();
 	printf("update loop starting.\n\n");
+	printf("makefile test\n\n");
 	while (quit == FALSE)
 	{
 		update_delta_time();
