@@ -6,7 +6,7 @@ MenuItem play_button = {
 	.x = 100,
 	.y = 100,
 	.rect = (SDL_Rect){ 300, 300, 300, 200 },
-	.text = "play",
+	.text = "PLAY",
 	.letters = NULL,
 	.num_letters = 4,
 };
@@ -29,6 +29,8 @@ void capitalize(char* s)
 	{
 		s[i] = toupper(s[i]);
 	}
+
+	printf("capitalized string: %s\n\n", s);
 }
 
 void map_letter_coords(char* s, Letter* letters)
@@ -42,6 +44,8 @@ void map_letter_coords(char* s, Letter* letters)
 
 		letters[i].texture_coord = j;
 		letters[i].texture_coord *= 8;
+
+		printf("letter_coord %d: %d\n", i, letters[i].texture_coord);
 	}
 }
 
@@ -54,6 +58,7 @@ void menu_init(SDL_Renderer* renderer)
 		exit(1);
 	}
 
+	//capitalize(play_button.text); // causing seg fault
 	play_button.letters = malloc(sizeof(Letter));
 	map_letter_coords(play_button.text, play_button.letters);
 
@@ -70,8 +75,10 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 		.w = 8,
 	};
 	SDL_Rect letter_rect = {
-		.x = m->x + 20,
-		.y = m->y + 20,
+		//.x = m->rect.x + 20,
+		//.y = m->rect.y + 20,
+		.x = 100,
+		.y = 100,
 		.w = 20,
 		.h = 20,
 	};
@@ -90,7 +97,7 @@ void menu_render(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
-	printf("menu rendering...\n");
+	//printf("menu rendering...\n");
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
@@ -108,5 +115,6 @@ void menu_quit()
 {
 	//free(play_button.letters);
 	main_menu.menu_items = NULL;
+	SDL_DestroyTexture(font_texture);
 	//free(main_menu.menu_items);
 }
