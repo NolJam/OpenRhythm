@@ -122,6 +122,23 @@ void input()
 	}
 }
 
+void menu_input()
+{
+	SDL_Event e;
+	while(SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_KEYDOWN)
+		{
+			if (e.key.keysym.sym == SDLK_SPACE)
+			{
+				state = PLAYING;
+				Mix_PlayMusic(music, 0);
+				update_delta_time();
+			}
+		}
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -200,8 +217,6 @@ int main(int argc, char* argv[])
 
 	menu_init(renderer);
 
-	Mix_PlayMusic(music, 0);
-	update_delta_time();
 	printf("update loop starting.\n\n");
 	printf("makefile test\n\n");
 
@@ -212,13 +227,16 @@ int main(int argc, char* argv[])
 		update_delta_time();
 		update_music_delta();
 
-		input();
+		//input();
 
 		if (state == MAIN_MENU)
 		{
+			menu_input();
 			menu_render(renderer);
 			continue;
 		}
+
+		input();
 
         	for (int i = 0; i < level->num_tracks; i++)
         	{
