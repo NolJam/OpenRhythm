@@ -10,10 +10,17 @@ MenuItem play_button = {
 	.letters = NULL,
 };
 
-Menu main_menu = NULL;
-Menu pause_menu = NULL;
+Menu main_menu = {
+	.menu_items = NULL,
+	.num_menu_items = 1,
+	.bkg_texture = NULL,
+};
 
-Menu* menus = [ NULL, main_menu, pause_menu ];
+Menu pause_menu = {
+	.bkg_texture = NULL,
+};
+
+Menu* menus = [ NULL, &main_menu, &pause_menu ];
 
 void capitalize(char* s)
 {
@@ -39,9 +46,28 @@ void map_letter_coords(char* s, Letter* letters)
 
 void menu_init()
 {
-	main_menu = malloc(sizeof(Menu));
+	play_button.letters = malloc(sizeof(Letter));
+	map_letter_coords(play_button.text, play_button.letters);
 
+	main_menu.menu_items = malloc(sizeof(MenuItem));
+	main_menu.menu_items[0] = play_button;
+}
 
-	main_menu->menu_items = malloc(sizeof(MenuItem));
-	*main_menu->menu_items[0] = play_button;
+void menu_render(SDL_Renderer* renderer, Menu* menu)
+{
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_RenderClear(renderer);
+
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+
+	for (int i = 0; i < num_menu_items; i++)
+	{
+		SDL_RenderDrawRect(renderer, menu->menu_items[i]);
+	}
+}
+
+void menu_quit()
+{
+	free(play_button.letters);
+	free(main_menu.menu_items);
 }

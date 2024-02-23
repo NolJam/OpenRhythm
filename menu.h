@@ -24,6 +24,7 @@ typedef struct MenuItem {
 
 typedef struct Menu {
 	MenuItem* menu_items;
+	int num_menu_items;
 	SDL_Texture* bkg_texture;
 } Menu;
 
@@ -39,5 +40,7 @@ void map_letter_coords(char* s, Letter* letters);
 void menu_init(); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
 
 void menu_render(SDL_Renderer* renderer, Menu* menu);
+
+void menu_quit();
 
 #endif
