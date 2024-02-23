@@ -8,8 +8,8 @@
 #define SCREEN_HEIGHT 576 // 18 32-pix chunks
 
 typedef enum GameState {
-	MAIN_MENU,
 	PLAYING,
+	MAIN_MENU,
 	PAUSED
 } GameState;
 

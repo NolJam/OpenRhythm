@@ -6,6 +6,7 @@
 #include "beat.h"
 #include "track.h"
 #include "level.h"
+#include "menu.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
@@ -33,6 +34,8 @@ SDL_Texture* beat_textures[2];
 SDL_Texture* t_tx1 = NULL;
 
 Level* level = NULL;
+
+GameState state = MAIN_MENU;
 
 SDL_Texture* texture_load(SDL_Renderer* r, const char* path)
 {
@@ -195,6 +198,8 @@ int main(int argc, char* argv[])
 
 	printf("BPM: %f\n\n", level->bpm);
 
+	menu_init(renderer);
+
 	Mix_PlayMusic(music, 0);
 	update_delta_time();
 	printf("update loop starting.\n\n");
@@ -203,6 +208,16 @@ int main(int argc, char* argv[])
 	{
 		update_delta_time();
 		update_music_delta();
+
+		if (state == MAIN_MENU)
+		{
+			menu_render(renderer);
+			//printf("main menu rendered\n\n");
+
+			input();
+
+			continue;
+		}
 
 		input();
 
@@ -258,6 +273,8 @@ int main(int argc, char* argv[])
 	}
 
 	free(level);
+
+	menu_quit();
 
 	Mix_CloseAudio();
 	Mix_FreeMusic(music);

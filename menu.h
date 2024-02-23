@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-SDL_Texture* font_texture;
+//SDL_Texture* font_texture;
 
 typedef struct Letter {
 	int x;
@@ -20,6 +20,7 @@ typedef struct MenuItem {
 	SDL_Rect rect;
 	char* text;
 	Letter* letters;
+	int num_letters;
 } MenuItem;
 
 typedef struct Menu {
@@ -28,18 +29,18 @@ typedef struct Menu {
 	SDL_Texture* bkg_texture;
 } Menu;
 
-Menu main_menu;
-Menu pause_menu;
+//Menu main_menu;
+//Menu pause_menu;
 
-extern Menu* menus[3]; // [ NULL, main_menu, pause_menu ] mapped to global GameState enum values
+//extern Menu menus[2]; // [ NULL, main_menu, pause_menu ] mapped to global GameState enum values
 
 void capitalize(char* s);
 
 void map_letter_coords(char* s, Letter* letters);
 
-void menu_init(); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
+void menu_init(SDL_Renderer* renderer); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
 
-void menu_render(SDL_Renderer* renderer, Menu* menu);
+void menu_render(SDL_Renderer* renderer);
 
 void menu_quit();
 
