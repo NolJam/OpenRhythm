@@ -101,8 +101,9 @@ void input()
 			{
 				if (e.key.keysym.sym == SDLK_ESCAPE)
 				{
-					state = MAIN_MENU;
-					Mix_HaltMusic();
+					menu_pause();
+					state = PAUSED;
+					Mix_PauseMusic();
 				}
 				else if (e.key.keysym.sym == SDLK_j)
 				{
@@ -135,12 +136,31 @@ void menu_input()
 		{
 			if (e.key.keysym.sym == SDLK_SPACE)
 			{
+				if (state == PAUSED)
+				{
+					Mix_ResumeMusic();
+					update_delta_time();
+					state = PLAYING;
+					continue;
+				}
+
 				level_load(level, "level1.lvl");
 				Mix_PlayMusic(music, 0);
 				update_delta_time();
 				state = PLAYING;
 			}
-			else if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
+			else if (e.key.keysym.sym == SDLK_ESCAPE)
+			{
+				if (state == PAUSED)
+				{
+					Mix_HaltMusic();
+					state = MAIN_MENU;
+					menu_main();
+					continue;
+				}
+
+				quit = TRUE;
+			}
 		}
 		else if (e.type == SDL_WINDOWEVENT)
 		{
@@ -241,6 +261,12 @@ int main(int argc, char* argv[])
 		//input();
 
 		if (state == MAIN_MENU)
+		{
+			menu_input();
+			menu_render(renderer);
+			continue;
+		}
+		else if (state == PAUSED)
 		{
 			menu_input();
 			menu_render(renderer);

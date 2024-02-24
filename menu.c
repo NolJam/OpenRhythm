@@ -11,6 +11,24 @@ MenuItem play_button = {
 	.num_letters = 4,
 };
 
+MenuItem resume_button = {
+	.x = 100,
+	.y = 50,
+	.rect = (SDL_Rect){ 100, 50, 300, 100 },
+	.text = "RESUME",
+	.letters = NULL,
+	.num_letters = 6,
+};
+
+MenuItem exit_button = {
+	.x = 100,
+	.y = 50,
+	.rect = (SDL_Rect){ 100, 150, 300, 100 },
+	.text = "EXIT",
+	.letters = NULL,
+	.num_letters = 4,
+};
+
 Menu main_menu = {
 	.menu_items = NULL,
 	.num_menu_items = 1,
@@ -18,9 +36,12 @@ Menu main_menu = {
 };
 
 Menu pause_menu = {
+	.menu_items = NULL,
+	.num_menu_items = 2,
 	.bkg_texture = NULL,
 };
 
+Menu* cur_menu = &main_menu;
 //Menu menus = [ main_menu, pause_menu ];
 
 void capitalize(char* s)
@@ -66,6 +87,17 @@ void menu_init(SDL_Renderer* renderer)
 
 	main_menu.menu_items = malloc(sizeof(MenuItem));
 	main_menu.menu_items[0] = play_button;
+
+
+	resume_button.letters = malloc(sizeof(Letter));
+	resume_button.letters = map_letter_coords(resume_button.text, resume_button.letters);
+
+	exit_button.letters = malloc(sizeof(Letter));
+	exit_button.letters = map_letter_coords(exit_button.text, exit_button.letters);
+
+	pause_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
+	pause_menu.menu_items[0] = resume_button;
+	pause_menu.menu_items[1] = exit_button;
 }
 
 void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
@@ -103,20 +135,33 @@ void menu_render(SDL_Renderer* renderer)
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
-	for (int i = 0; i < main_menu.num_menu_items; i++)
+	for (int i = 0; i < cur_menu->num_menu_items; i++)
 	{
-		SDL_RenderDrawRect(renderer, &main_menu.menu_items[i].rect);
+		SDL_RenderDrawRect(renderer, &cur_menu->menu_items[i].rect);
 
-		menu_render_letters(renderer, &main_menu.menu_items[i]);
+		menu_render_letters(renderer, &cur_menu->menu_items[i]);
 	}
 	
 	SDL_RenderPresent(renderer);
 }
 
+void menu_pause()
+{
+	cur_menu = &pause_menu;
+}
+
+void menu_main()
+{
+	cur_menu = &main_menu;
+}
+
 void menu_quit()
 {
-	//free(play_button.letters);
-	main_menu.menu_items = NULL;
+	free(play_button.letters);
+	free(resume_button.letters);
+	free(exit_button.letters);
+	//main_menu.menu_items = NULL;
 	SDL_DestroyTexture(font_texture);
-	//free(main_menu.menu_items);
+	free(main_menu.menu_items);
+	free(pause_menu.menu_items);
 }

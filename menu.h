@@ -42,6 +42,10 @@ void menu_init(SDL_Renderer* renderer); // load font_texture, load Letters' text
 
 void menu_render(SDL_Renderer* renderer);
 
+void menu_pause(); // set current meny to pause for menu_render func
+
+void menu_main(); // set current menu to main for menu_render func
+
 void menu_quit();
 
 #endif
