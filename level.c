@@ -50,8 +50,8 @@ void level_load(Level* lvl, char* file_name)
 				Beat* ptr = realloc(lvl->tracks[track_marker].beats, (size_t)(lvl->tracks[track_marker].beat_block) * sizeof(Beat));
 				if (ptr == NULL) exit(1);
 				lvl->tracks[track_marker].beats = ptr;
-				printf("track marker: %d\n", track_marker);
-				printf("beat address: %p\n", lvl->tracks[track_marker].beats);
+				//printf("track marker: %d\n", track_marker);
+				//printf("beat address: %p\n", lvl->tracks[track_marker].beats);
 			}
 
 			//int measure = 0;
@@ -59,7 +59,7 @@ void level_load(Level* lvl, char* file_name)
 			//int track_marker = 0; // defined earlier
 			sscanf(line, BEAT_FORMAT, &track_marker, &b);
 			//printf("beat value: %f\n", b);
-			printf("^track marker: %d\n\n", track_marker);
+			//printf("^track marker: %d\n\n", track_marker);
 
 			Beat load_beat;
 

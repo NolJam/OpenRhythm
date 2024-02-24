@@ -36,7 +36,7 @@ typedef struct Menu {
 
 void capitalize(char* s);
 
-void map_letter_coords(char* s, Letter* letters);
+Letter* map_letter_coords(char* s, Letter* letters);
 
 void menu_init(SDL_Renderer* renderer); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
 

@@ -33,7 +33,7 @@ void capitalize(char* s)
 	printf("capitalized string: %s\n\n", s);
 }
 
-void map_letter_coords(char* s, Letter* letters)
+Letter* map_letter_coords(char* s, Letter* letters)
 {
 	letters = realloc(letters, strlen(s)*sizeof(Letter));
 
@@ -47,6 +47,8 @@ void map_letter_coords(char* s, Letter* letters)
 
 		printf("letter_coord %d: %d\n", i, letters[i].texture_coord);
 	}
+
+	return letters;
 }
 
 void menu_init(SDL_Renderer* renderer)
@@ -60,7 +62,7 @@ void menu_init(SDL_Renderer* renderer)
 
 	//capitalize(play_button.text); // causing seg fault
 	play_button.letters = malloc(sizeof(Letter));
-	map_letter_coords(play_button.text, play_button.letters);
+	play_button.letters = map_letter_coords(play_button.text, play_button.letters);
 
 	main_menu.menu_items = malloc(sizeof(MenuItem));
 	main_menu.menu_items[0] = play_button;
@@ -75,10 +77,10 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 		.w = 8,
 	};
 	SDL_Rect letter_rect = {
-		//.x = m->rect.x + 20,
-		//.y = m->rect.y + 20,
-		.x = 100,
-		.y = 100,
+		.x = m->rect.x + 20,
+		.y = m->rect.y + 20,
+		//.x = 100,
+		//.y = 100,
 		.w = 20,
 		.h = 20,
 	};
@@ -89,7 +91,7 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 
 		SDL_RenderCopy(renderer, font_texture, &source_rect, &letter_rect);
 
-		letter_rect.x += 20;
+		letter_rect.x += 25;
 	}
 }
 
