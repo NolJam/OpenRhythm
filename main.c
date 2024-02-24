@@ -99,7 +99,11 @@ void input()
 	{
 		if (e.type == SDL_KEYDOWN)
 			{
-				if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
+				if (e.key.keysym.sym == SDLK_ESCAPE)
+				{
+					state = MAIN_MENU;
+					Mix_HaltMusic();
+				}
 				else if (e.key.keysym.sym == SDLK_j)
 				{
 					if (track_press(&level->tracks[0])) continue;
@@ -131,11 +135,18 @@ void menu_input()
 		{
 			if (e.key.keysym.sym == SDLK_SPACE)
 			{
-				state = PLAYING;
+				level_load(level, "level1.lvl");
 				Mix_PlayMusic(music, 0);
 				update_delta_time();
+				state = PLAYING;
 			}
+			else if (e.key.keysym.sym == SDLK_ESCAPE) quit = TRUE;
 		}
+		else if (e.type == SDL_WINDOWEVENT)
+		{
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.type == SDL_WINDOWEVENT_SIZE_CHANGED) resize_screen();
+		}
+		else if (e.type == SDL_QUIT) quit = TRUE;
 	}
 }
 
@@ -211,7 +222,7 @@ int main(int argc, char* argv[])
 	printf("%f\n", level->tracks[i].beats[0].x);
 	}
 
-	level_load(level, "level1.lvl");
+	//level_load(level, "level1.lvl");
 
 	printf("BPM: %f\n\n", level->bpm);
 
