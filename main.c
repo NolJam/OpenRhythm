@@ -101,7 +101,7 @@ void input()
 			{
 				if (e.key.keysym.sym == SDLK_ESCAPE)
 				{
-					menu_pause();
+					menu_set_pause();
 					state = PAUSED;
 					Mix_PauseMusic();
 				}
@@ -155,7 +155,7 @@ void menu_input()
 				{
 					Mix_HaltMusic();
 					state = MAIN_MENU;
-					menu_main();
+					menu_set_main();
 					continue;
 				}
 

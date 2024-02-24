@@ -145,12 +145,12 @@ void menu_render(SDL_Renderer* renderer)
 	SDL_RenderPresent(renderer);
 }
 
-void menu_pause()
+void menu_set_pause()
 {
 	cur_menu = &pause_menu;
 }
 
-void menu_main()
+void menu_set_main()
 {
 	cur_menu = &main_menu;
 }
