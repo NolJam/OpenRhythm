@@ -192,6 +192,7 @@ void menu_input()
 					update_delta_time();
 					state = PLAYING;
 				}
+				else if (button == 1) quit = TRUE;
 			}
 		}
 		else if (e.type == SDL_WINDOWEVENT)

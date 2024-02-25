@@ -9,6 +9,13 @@ MenuItem play_button = {
 	.num_letters = 4,
 };
 
+MenuItem quit_button = {
+	.rect = (SDL_Rect){ 700, 400, 300, 100 },
+	.text = "QUIT",
+	.letters = NULL,
+	.num_letters = 4,
+};
+
 MenuItem resume_button = {
 	.rect = (SDL_Rect){ 100, 50, 300, 100 },
 	.text = "RESUME",
@@ -25,7 +32,7 @@ MenuItem exit_button = {
 
 Menu main_menu = {
 	.menu_items = NULL,
-	.num_menu_items = 1,
+	.num_menu_items = 2,
 	.bkg_texture = NULL,
 };
 
@@ -79,8 +86,12 @@ void menu_init(SDL_Renderer* renderer)
 	play_button.letters = malloc(sizeof(Letter));
 	play_button.letters = map_letter_coords(play_button.text, play_button.letters);
 
-	main_menu.menu_items = malloc(sizeof(MenuItem));
+	quit_button.letters = malloc(sizeof(Letter));
+	quit_button.letters = map_letter_coords(quit_button.text, quit_button.letters);
+
+	main_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	main_menu.menu_items[0] = play_button;
+	main_menu.menu_items[1] = quit_button;
 
 
 	resume_button.letters = malloc(sizeof(Letter));
@@ -169,6 +180,7 @@ void menu_set_main()
 void menu_quit()
 {
 	free(play_button.letters);
+	free(quit_button.letters);
 	free(resume_button.letters);
 	free(exit_button.letters);
 	//main_menu.menu_items = NULL;
