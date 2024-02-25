@@ -15,8 +15,6 @@ typedef struct Letter {
 } Letter;
 
 typedef struct MenuItem {
-	int x;
-	int y;
 	SDL_Rect rect;
 	char* text;
 	Letter* letters;
@@ -39,6 +37,8 @@ void capitalize(char* s);
 Letter* map_letter_coords(char* s, Letter* letters);
 
 void menu_init(SDL_Renderer* renderer); // load font_texture, load Letters' texture_coords (could be done manually but less scalable) 
+
+int menu_click(int x, int y);
 
 void menu_render(SDL_Renderer* renderer);
 

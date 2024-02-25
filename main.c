@@ -162,6 +162,38 @@ void menu_input()
 				quit = TRUE;
 			}
 		}
+		else if (e.type == SDL_MOUSEBUTTONUP)
+		{
+			int button = menu_click(e.button.x, e.button.y);
+
+			if (state == PAUSED)
+			{
+				if (button == 0)
+				{
+					Mix_ResumeMusic();
+					update_delta_time();
+					state = PLAYING;
+					continue;
+				}
+				else if (button == 1)
+				{
+					Mix_HaltMusic();
+					state = MAIN_MENU;
+					menu_set_main();
+					continue;
+				}
+			}
+			else if (state == MAIN_MENU)
+			{
+				if (button == 0)
+				{
+					level_load(level, "level1.lvl");
+					Mix_PlayMusic(music, 0);
+					update_delta_time();
+					state = PLAYING;
+				}
+			}
+		}
 		else if (e.type == SDL_WINDOWEVENT)
 		{
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.type == SDL_WINDOWEVENT_SIZE_CHANGED) resize_screen();

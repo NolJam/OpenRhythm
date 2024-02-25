@@ -3,8 +3,6 @@
 SDL_Texture* font_texture = NULL;
 
 MenuItem play_button = {
-	.x = 100,
-	.y = 100,
 	.rect = (SDL_Rect){ 300, 300, 300, 200 },
 	.text = "PLAY",
 	.letters = NULL,
@@ -12,8 +10,6 @@ MenuItem play_button = {
 };
 
 MenuItem resume_button = {
-	.x = 100,
-	.y = 50,
 	.rect = (SDL_Rect){ 100, 50, 300, 100 },
 	.text = "RESUME",
 	.letters = NULL,
@@ -21,9 +17,7 @@ MenuItem resume_button = {
 };
 
 MenuItem exit_button = {
-	.x = 100,
-	.y = 50,
-	.rect = (SDL_Rect){ 100, 150, 300, 100 },
+	.rect = (SDL_Rect){ 100, 200, 300, 100 },
 	.text = "EXIT",
 	.letters = NULL,
 	.num_letters = 4,
@@ -98,6 +92,23 @@ void menu_init(SDL_Renderer* renderer)
 	pause_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	pause_menu.menu_items[0] = resume_button;
 	pause_menu.menu_items[1] = exit_button;
+
+	printf("sizeof MenuItem: %zu\n\n", sizeof(MenuItem));
+}
+
+int menu_click(int x, int y)
+{
+	for (int i = 0; i < cur_menu->num_menu_items; i++)
+	{
+		if (x > cur_menu->menu_items[i].rect.x && x < cur_menu->menu_items[i].rect.x + cur_menu->menu_items[i].rect.w &&
+				y > cur_menu->menu_items[i].rect.y && y < cur_menu->menu_items[i].rect.y + cur_menu->menu_items[i].rect.h)
+		{
+			printf("menu item clicked\n\n");
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
