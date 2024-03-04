@@ -14,6 +14,8 @@ typedef enum BeatScore {
 
 void score_increment(BeatScore s);
 
+void score_reset();
+
 void score_streak_increment();
 
 void score_streak_reset();

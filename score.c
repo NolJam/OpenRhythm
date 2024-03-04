@@ -10,6 +10,11 @@ void score_increment(BeatScore s)
 	printf("score: %d\n\n", level_score);
 }
 
+void score_reset()
+{
+	level_score = 0;
+}
+
 void score_streak_increment()
 {
 	great_streak += 1;

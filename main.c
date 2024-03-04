@@ -154,6 +154,7 @@ void menu_input()
 			{
 				if (state == PAUSED)
 				{
+					score_reset();
 					Mix_HaltMusic();
 					state = MAIN_MENU;
 					menu_set_main();
@@ -178,6 +179,7 @@ void menu_input()
 				}
 				else if (button == 1)
 				{
+					score_reset();
 					Mix_HaltMusic();
 					state = MAIN_MENU;
 					menu_set_main();
