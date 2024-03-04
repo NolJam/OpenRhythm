@@ -118,6 +118,7 @@ void level_free(Level* lvl)
 
 	for (int i = 0; i < 5; i++)
 	{
+		if (lvl->tracks[i].beats == NULL) continue;
 		free(lvl->tracks[i].beats);
 		lvl->tracks[i].beats = NULL;
 	}
