@@ -44,6 +44,7 @@ void level_load(Level* lvl, char* file_name)
 		{
 			//int track_marker = 0;
             		int track_marker = line[2] - '0';
+			if (track_marker > 4 || track_marker < 0) continue;
 
 			if (lvl->tracks[track_marker].num_beats == lvl->tracks[track_marker].beat_block)
 			{
@@ -57,7 +58,7 @@ void level_load(Level* lvl, char* file_name)
 			}
 
 			//int measure = 0;
-			float b = 0;
+			float b = 0.0f;
 			//int track_marker = 0; // defined earlier
 			sscanf(line, BEAT_FORMAT, &track_marker, &b);
 			//printf("beat value: %f\n", b);
