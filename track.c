@@ -6,7 +6,8 @@ int track_press(Track* t)
 
 	if (t->beats[t->cur_beat].x - t->x <= t->sprite.w)
 	{
-		printf("beat hit!\n\n");
+		BeatScore b = GOOD;
+		score_increment(b);
 		t->cur_beat++;
 		return TRUE;
 	}

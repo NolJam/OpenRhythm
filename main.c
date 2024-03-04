@@ -7,6 +7,7 @@
 #include "track.h"
 #include "level.h"
 #include "menu.h"
+#include "score.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;

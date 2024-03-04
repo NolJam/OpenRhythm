@@ -6,6 +6,7 @@
 
 #include "globals.h"
 #include "beat.h"
+#include "score.h"
 
 typedef struct Track {
 	float x;

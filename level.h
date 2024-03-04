@@ -5,6 +5,7 @@
 #include "globals.h"
 #include "beat.h"
 #include "track.h"
+#include "score.h"
 
 extern const char* BEAT_FORMAT;
 extern const char* MEASURE_FORMAT;

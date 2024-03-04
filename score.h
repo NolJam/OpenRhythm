@@ -1,6 +1,7 @@
 #ifndef GAME_DEF
 #define GAME_DEF
 
+#include <stdio.h>
 #include "globals.h"
 
 typedef enum BeatScore {
@@ -11,16 +12,12 @@ typedef enum BeatScore {
 	PERFECT,
 } BeatScore;
 
-extern int level_score;
-
-int great_streak;
-
 void score_increment(BeatScore s);
 
 void score_streak_increment();
 
 void score_streak_reset();
 
-void score_get_streak();
+int score_get_streak();
 
 #endif
