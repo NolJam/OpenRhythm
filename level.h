@@ -23,4 +23,6 @@ typedef struct Level {
 
 void level_load(Level* lvl, char* file_name);
 
+void level_free(Level* lvl);
+
 #endif

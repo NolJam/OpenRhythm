@@ -2,6 +2,8 @@
 
 int track_press(Track* t)
 {
+	if (t == NULL) return FALSE;
+
 	if (t->beats[t->cur_beat].x - t->x <= t->sprite.w)
 	{
 		printf("beat hit!\n\n");
@@ -13,6 +15,8 @@ int track_press(Track* t)
 
 void track_init(Track* t, int x, int y)
 {
+	if (t == NULL) return;
+
 	t->x = x;
 	t->y = y;
 	t->sprite.x = t->x;

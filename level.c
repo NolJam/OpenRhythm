@@ -7,13 +7,15 @@ const char* TRACK_FORMAT = "t %d %d\n"; // x, y
 
 void level_load(Level* lvl, char* file_name)
 {
+	if (lvl == NULL) return;
+
 	FILE* file = fopen(file_name, "r");
 	if (file == NULL)
 	{
 		printf("file could not be opened.\n\n");
 	}
 
-	char line[100];
+	char line[1024];
 	// int n = 0;
 	int beat_block = 10;
 	int track_index = 0;
@@ -27,13 +29,13 @@ void level_load(Level* lvl, char* file_name)
 
         lvl->tracks[i].cur_beat = 0;
 
-		lvl->tracks[i].num_beats = 0;
+	lvl->tracks[i].num_beats = 0;
 
-		lvl->tracks[i].beat_block = 10;
+	lvl->tracks[i].beat_block = 10;
 
-		//printf("index: %d\n", i);
-		//printf("track beats realloc'd\n\n");
-		//printf("beat block: %d\n\n", lvl->tracks[i].beat_block);
+	//printf("index: %d\n", i);
+	//printf("track beats realloc'd\n\n");
+	//printf("beat block: %d\n\n", lvl->tracks[i].beat_block);
     }
 
 	while (fgets(line, sizeof(line), file))
@@ -108,3 +110,17 @@ void level_load(Level* lvl, char* file_name)
 
 	fclose(file);
 }
+
+void level_free(Level* lvl)
+{
+	if (lvl == NULL) return;
+
+	for (int i = 0; i < 5; i++)
+	{
+		free(lvl->tracks[i].beats);
+		lvl->tracks[i].beats = NULL;
+	}
+
+	free(lvl);
+}
+

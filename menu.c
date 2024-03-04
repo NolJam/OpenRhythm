@@ -57,6 +57,8 @@ void capitalize(char* s)
 
 Letter* map_letter_coords(char* s, Letter* letters)
 {
+	if (letters == NULL) return NULL;
+
 	letters = realloc(letters, strlen(s)*sizeof(Letter));
 
 	for (int i = 0; i < strlen(s); i++) 
@@ -75,6 +77,8 @@ Letter* map_letter_coords(char* s, Letter* letters)
 
 void menu_init(SDL_Renderer* renderer)
 {
+	if (renderer == NULL) return;
+
 	font_texture = IMG_LoadTexture(renderer, "alphabet.bmp");
 	if (font_texture == NULL)
 	{
@@ -124,6 +128,8 @@ int menu_click(int x, int y)
 
 void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 {
+	if (renderer == NULL || m == NULL) return;
+
 	SDL_Rect source_rect = {
 		.x = 0,
 		.y = 0,
@@ -151,6 +157,8 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 
 void menu_render(SDL_Renderer* renderer)
 {
+	if (renderer == NULL) return;
+
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
 	//printf("menu rendering...\n");

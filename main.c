@@ -359,7 +359,7 @@ int main(int argc, char* argv[])
 		SDL_RenderPresent(renderer);
 	}
 
-	free(level);
+	level_free(level);
 
 	menu_quit();
 
