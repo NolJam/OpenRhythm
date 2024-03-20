@@ -1,7 +1,7 @@
 #ifndef BEAT_HEADER
 #define BEAT_HEADER
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 typedef struct Beat {
 	float x;

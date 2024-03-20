@@ -1,6 +1,6 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include "globals.h"
 #include "beat.h"
@@ -26,11 +26,19 @@ int cur_screen_h = 576;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+
 Mix_Music* music = NULL;
+Mix_Chunk* hitGood = NULL;
+Mix_Chunk* hitBad = NULL;
+Mix_Chunk* miss = NULL;
+Mix_Chunk* menuForward = NULL;
+Mix_Chunk* menuBack = NULL;
 
 SDL_Texture* up_texture = NULL;
 SDL_Texture* down_texture = NULL;
-SDL_Texture* beat_textures[2];
+SDL_Texture* left_texture = NULL;
+SDL_Texture* right_texture = NULL;
+SDL_Texture* beat_textures[4];
 
 SDL_Texture* t_tx1 = NULL;
 
@@ -38,7 +46,7 @@ Level* level = NULL;
 
 GameState state = MAIN_MENU;
 
-SDL_Texture* texture_load(SDL_Renderer* r, const char* path)
+static SDL_Texture* texture_load(SDL_Renderer* r, const char* path)
 {
 	SDL_Texture* new_texture = SDL_CreateTexture(r, 376840196, 0, 16, 16);
 	if (new_texture == NULL)
@@ -63,7 +71,7 @@ SDL_Texture* texture_load(SDL_Renderer* r, const char* path)
 	return new_texture;
 }
 
-void update_delta_time()
+static void update_delta_time()
 {
         last_ticks = cur_ticks;
         cur_ticks = SDL_GetTicks64();
@@ -74,7 +82,7 @@ void update_delta_time()
         if (delta_time < 8) SDL_Delay(8 - delta_time);
 }
 
-void update_music_delta()
+static void update_music_delta()
 {
 	if (Mix_PlayingMusic() == 0) return;
 	
@@ -84,7 +92,7 @@ void update_music_delta()
 	music_delta = cur_music_pos - last_music_pos;
 }
 
-void resize_screen() 
+static void resize_screen() 
 {
 	SDL_GetWindowSize(window, &cur_screen_w, &cur_screen_h);
 	//printf("window width: %d\nwindow height: %d\n", cur_screen_w, cur_screen_h);
@@ -93,7 +101,7 @@ void resize_screen()
 	SDL_RenderSetScale(renderer, (float)cur_screen_w / (float)SCREEN_WIDTH, (float)cur_screen_h / (float)SCREEN_HEIGHT);
 }
 
-void input()
+static void input()
 {
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
@@ -105,16 +113,27 @@ void input()
 					menu_set_pause();
 					state = PAUSED;
 					Mix_PauseMusic();
+					Mix_PlayChannel(-1, menuBack, 0);
 				}
-				else if (e.key.keysym.sym == SDLK_j)
+				else if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
 				{
-					if (track_press(&level->tracks[0])) continue;
+					if (track_press(&level->tracks[0]))
+					{
+						Mix_PlayChannel(-1, hitGood, 0);
+
+						continue;
+					}
 					//printf("cur beat: %d\n\n", level->cur_beat);
 					else printf("no beat hit.\n\n");
 				}
-				else if (e.key.keysym.sym == SDLK_k)
+				else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
 				{
-					if (track_press(&level->tracks[1])) continue;
+					if (track_press(&level->tracks[1]))
+					{
+						Mix_PlayChannel(-1, hitGood, 0);
+
+						continue;
+					}
 					//printf("cur beat: %d\n\n", level->cur_beat);
 					else printf("no beat hit.\n\n");
 
@@ -128,7 +147,7 @@ void input()
 	}
 }
 
-void menu_input()
+static void menu_input()
 {
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
@@ -156,6 +175,7 @@ void menu_input()
 				{
 					score_reset();
 					Mix_HaltMusic();
+					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
 					continue;
@@ -181,6 +201,7 @@ void menu_input()
 				{
 					score_reset();
 					Mix_HaltMusic();
+					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
 					continue;
@@ -245,10 +266,14 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	up_texture = texture_load(renderer, "up.png");
-	beat_textures[0] = up_texture;
-	down_texture = texture_load(renderer, "down.png");
-	beat_textures[1] = down_texture;
+	left_texture = texture_load(renderer, "left.png");
+	beat_textures[0] = left_texture;
+	right_texture = texture_load(renderer, "right.png");
+	beat_textures[1] = right_texture;
+	//up_texture = texture_load(renderer, "up.png");
+	//beat_textures[0] = up_texture;
+	//down_texture = texture_load(renderer, "down.png");
+	//beat_textures[1] = down_texture;
 
 	t_tx1 = texture_load(renderer, "track1.png");
 
@@ -260,12 +285,26 @@ int main(int argc, char* argv[])
 		printf("mixer couldn't init. error: %s\n", Mix_GetError());
 		exit(1);
 	}
-	music = Mix_LoadMUS("song.mp3");
+	music = Mix_LoadMUS("TH.wav");
 	if (music == NULL)
 	{
 		printf("music couldn't be loaded");
 		exit(1);
 	}
+	hitGood = Mix_LoadWAV("hitGood.wav");
+	Mix_VolumeChunk(hitGood, 64);
+
+	hitBad = Mix_LoadWAV("hitBad.wav");
+	Mix_VolumeChunk(hitBad, 64);
+
+	miss = Mix_LoadWAV("miss.wav");
+	Mix_VolumeChunk(miss, 64);
+
+	menuForward = Mix_LoadWAV("menuForward.wav");
+	Mix_VolumeChunk(menuForward, 64);
+
+	menuBack = Mix_LoadWAV("menuBack.wav");
+	Mix_VolumeChunk(menuBack, 64);
 
 	// LEVEL
 	level = malloc(sizeof(Level));
@@ -288,6 +327,8 @@ int main(int argc, char* argv[])
 	printf("makefile test\n\n");
 
 	menu_render(renderer);
+
+	Mix_PlayChannel(-1, menuForward, 0);
 
 	while (quit == FALSE)
 	{
@@ -317,6 +358,7 @@ int main(int argc, char* argv[])
 					level->tracks[i].cur_beat < level->tracks[i].num_beats)
             		{
                 		level->tracks[i].cur_beat++;
+						Mix_PlayChannel(-1, miss, 0);
                 		printf("beat missed\n\n");
             		}
         	}
@@ -369,6 +411,16 @@ int main(int argc, char* argv[])
 	Mix_CloseAudio();
 	Mix_FreeMusic(music);
 	music = NULL;
+	Mix_FreeChunk(hitGood);
+	hitGood = NULL;
+	Mix_FreeChunk(hitBad);
+	hitBad = NULL;
+	Mix_FreeChunk(miss);
+	miss = NULL;
+	Mix_FreeChunk(menuForward);
+	menuForward = NULL;
+	Mix_FreeChunk(menuBack);
+	menuBack = NULL;
 
 	SDL_DestroyTexture(up_texture);
 	up_texture = NULL;

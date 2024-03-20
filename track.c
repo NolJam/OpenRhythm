@@ -2,7 +2,7 @@
 
 int track_press(Track* t)
 {
-	if (t == NULL) return FALSE;
+	if (t == NULL || t->cur_beat >= t->num_beats) return FALSE;
 
 	if (t->beats[t->cur_beat].x - t->x <= t->sprite.w)
 	{
@@ -11,7 +11,7 @@ int track_press(Track* t)
 		t->cur_beat++;
 		return TRUE;
 	}
-	else return FALSE;
+	return FALSE;
 }
 
 void track_init(Track* t, int x, int y)

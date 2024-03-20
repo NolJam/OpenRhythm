@@ -2,45 +2,9 @@
 
 SDL_Texture* font_texture = NULL;
 
-MenuItem play_button = {
-	.rect = (SDL_Rect){ 300, 300, 300, 200 },
-	.text = "PLAY",
-	.letters = NULL,
-	.num_letters = 4,
-};
+MenuItem play_button, quit_button, resume_button, exit_button;
 
-MenuItem quit_button = {
-	.rect = (SDL_Rect){ 700, 400, 300, 100 },
-	.text = "QUIT",
-	.letters = NULL,
-	.num_letters = 4,
-};
-
-MenuItem resume_button = {
-	.rect = (SDL_Rect){ 100, 50, 300, 100 },
-	.text = "RESUME",
-	.letters = NULL,
-	.num_letters = 6,
-};
-
-MenuItem exit_button = {
-	.rect = (SDL_Rect){ 100, 200, 300, 100 },
-	.text = "EXIT",
-	.letters = NULL,
-	.num_letters = 4,
-};
-
-Menu main_menu = {
-	.menu_items = NULL,
-	.num_menu_items = 2,
-	.bkg_texture = NULL,
-};
-
-Menu pause_menu = {
-	.menu_items = NULL,
-	.num_menu_items = 2,
-	.bkg_texture = NULL,
-};
+Menu main_menu, pause_menu;
 
 Menu* cur_menu = &main_menu;
 //Menu menus = [ main_menu, pause_menu ];
@@ -59,7 +23,9 @@ Letter* map_letter_coords(char* s, Letter* letters)
 {
 	if (letters == NULL) return NULL;
 
-	letters = realloc(letters, strlen(s)*sizeof(Letter));
+	Letter* ptr = realloc(letters, strlen(s)*sizeof(Letter));
+	if (ptr == NULL) exit(1);
+	letters = ptr;
 
 	for (int i = 0; i < strlen(s); i++) 
 	{
@@ -78,6 +44,46 @@ Letter* map_letter_coords(char* s, Letter* letters)
 void menu_init(SDL_Renderer* renderer)
 {
 	if (renderer == NULL) return;
+
+	play_button = (MenuItem) {
+	.rect = (SDL_Rect){ 300, 300, 300, 200 },
+	.text = "PLAY",
+	.letters = NULL,
+	.num_letters = 4,
+	};
+
+	quit_button = (MenuItem) {
+		.rect = (SDL_Rect){ 700, 400, 300, 100 },
+		.text = "QUIT",
+		.letters = NULL,
+		.num_letters = 4,
+	};
+
+	resume_button = (MenuItem) {
+		.rect = (SDL_Rect){ 100, 50, 300, 100 },
+		.text = "RESUME",
+		.letters = NULL,
+		.num_letters = 6,
+	};
+
+	exit_button = (MenuItem) {
+		.rect = (SDL_Rect){ 100, 200, 300, 100 },
+		.text = "EXIT",
+		.letters = NULL,
+		.num_letters = 4,
+	};
+
+	main_menu = (Menu) {
+		.menu_items = NULL,
+		.num_menu_items = 2,
+		.bkg_texture = NULL,
+	};
+
+	pause_menu = (Menu) {
+		.menu_items = NULL,
+		.num_menu_items = 2,
+		.bkg_texture = NULL,
+	};
 
 	font_texture = IMG_LoadTexture(renderer, "alphabet.bmp");
 	if (font_texture == NULL)

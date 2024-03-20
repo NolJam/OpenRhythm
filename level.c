@@ -13,6 +13,7 @@ void level_load(Level* lvl, char* file_name)
 	if (file == NULL)
 	{
 		printf("file could not be opened.\n\n");
+		exit(1);
 	}
 
 	char line[1024];
@@ -43,7 +44,14 @@ void level_load(Level* lvl, char* file_name)
 		if (line[0] == 'b')
 		{
 			//int track_marker = 0;
-            		int track_marker = line[2] - '0';
+			float b = 0.0f;
+
+            //int track_marker = line[2] - '0';
+			int track_marker = 0;
+
+			sscanf_s(line, BEAT_FORMAT, &track_marker, &b);
+
+			if (b > 3.0f || b < 0.0f) continue;
 			if (track_marker > 4 || track_marker < 0) continue;
 
 			if (lvl->tracks[track_marker].num_beats == lvl->tracks[track_marker].beat_block)
@@ -58,9 +66,9 @@ void level_load(Level* lvl, char* file_name)
 			}
 
 			//int measure = 0;
-			float b = 0.0f;
+			//float b = 0.0f;
 			//int track_marker = 0; // defined earlier
-			sscanf(line, BEAT_FORMAT, &track_marker, &b);
+			//sscanf_s(line, BEAT_FORMAT, &track_marker, &b);
 			//printf("beat value: %f\n", b);
 			//printf("^track marker: %d\n\n", track_marker);
 
@@ -84,17 +92,17 @@ void level_load(Level* lvl, char* file_name)
 		}
 		else if (line[0] == 'm')
 		{
-			sscanf(line, MEASURE_FORMAT, &measure);
+			sscanf_s(line, MEASURE_FORMAT, &measure);
 			//printf("writing measure: %d\n\n", measure);
 		}
 		else if (line[0] == '>')
 		{
-			sscanf(line, BPM_FORMAT, &lvl->bpm);
+			sscanf_s(line, BPM_FORMAT, &lvl->bpm);
 		}
 		else if (line[0] == 't')
 		{
 			int track_x, track_y = 0;
-			sscanf(line, TRACK_FORMAT, &track_x, &track_y);
+			sscanf_s(line, TRACK_FORMAT, &track_x, &track_y);
 			track_init(&lvl->tracks[track_index], track_x, track_y);
 			track_index++;
 		}
