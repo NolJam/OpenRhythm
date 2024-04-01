@@ -214,7 +214,7 @@ void menu_render(SDL_Renderer* renderer)
 	//else printf("num menu items: %d\n\n", play_menu.num_menu_items);
 }
 
-void menu_reset_score()
+static void menu_reset_score()
 {
 	score_display.num_letters = 1;
 	score_display.text = "0";

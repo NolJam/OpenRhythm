@@ -16,6 +16,11 @@ void score_reset()
 	level_score = 0;
 }
 
+int get_level_score()
+{
+	return level_score;
+}
+
 void score_streak_increment()
 {
 	great_streak += 1;

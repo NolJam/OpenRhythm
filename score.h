@@ -17,6 +17,8 @@ void score_increment(BeatScore s);
 
 void score_reset();
 
+int get_level_score();
+
 void score_streak_increment();
 
 void score_streak_reset();

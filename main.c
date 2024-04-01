@@ -377,6 +377,13 @@ int main(int argc, char* argv[])
 			continue;
 		}
 
+		if (Mix_PlayingMusic() == 0)
+		{
+			menu_set_main();
+			state = MAIN_MENU;
+			Mix_PlayChannel(-1, menuForward, 0);
+		}
+
 		input();
 
         	for (int i = 0; i < level->num_tracks; i++)
