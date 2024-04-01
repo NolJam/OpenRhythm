@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "globals.h"
+#include "menu.h"
 
 typedef enum BeatScore {
 	MISS,

@@ -8,6 +8,7 @@ void score_increment(BeatScore s)
 {
 	level_score += (int)s;
 	printf("score: %d\n\n", level_score);
+	menu_update_score(level_score);
 }
 
 void score_reset()

@@ -10,7 +10,7 @@
 typedef enum GameState {
 	PLAYING,
 	MAIN_MENU,
-	PAUSED
+	PAUSED,
 } GameState;
 
 #endif

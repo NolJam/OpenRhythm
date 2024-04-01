@@ -115,9 +115,20 @@ static void input()
 					Mix_PauseMusic();
 					Mix_PlayChannel(-1, menuBack, 0);
 				}
+				else if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w)
+				{
+					if (level->num_tracks > 0 && track_press(&level->tracks[0]))
+					{
+						Mix_PlayChannel(-1, hitGood, 0);
+						
+						continue;
+					}
+					//printf("cur beat: %d\n\n", level->cur_beat);
+					else printf("no beat hit.\n\n");
+				}
 				else if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
 				{
-					if (track_press(&level->tracks[0]))
+					if (level->num_tracks > 1 && track_press(&level->tracks[1]))
 					{
 						Mix_PlayChannel(-1, hitGood, 0);
 
@@ -128,15 +139,23 @@ static void input()
 				}
 				else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
 				{
-					if (track_press(&level->tracks[1]))
+					if (level->num_tracks > 2 && track_press(&level->tracks[2]))
 					{
 						Mix_PlayChannel(-1, hitGood, 0);
 
 						continue;
 					}
-					//printf("cur beat: %d\n\n", level->cur_beat);
 					else printf("no beat hit.\n\n");
+				}
+				else if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s)
+				{
+					if (level->num_tracks > 3 && track_press(&level->tracks[3]))
+					{
+						Mix_PlayChannel(-1, hitGood, 0);
 
+						continue;
+					}
+					else printf("no beat hit.\n\n");
 				}
 			}
 		else if (e.type == SDL_WINDOWEVENT)
@@ -159,6 +178,7 @@ static void menu_input()
 				if (state == PAUSED)
 				{
 					Mix_ResumeMusic();
+					menu_set_play();
 					update_delta_time();
 					state = PLAYING;
 					continue;
@@ -166,6 +186,7 @@ static void menu_input()
 
 				level_load(level, "level1.lvl");
 				Mix_PlayMusic(music, 0);
+				menu_set_play();
 				update_delta_time();
 				state = PLAYING;
 			}
@@ -193,6 +214,7 @@ static void menu_input()
 				if (button == 0)
 				{
 					Mix_ResumeMusic();
+					menu_set_play();
 					update_delta_time();
 					state = PLAYING;
 					continue;
@@ -213,6 +235,7 @@ static void menu_input()
 				{
 					level_load(level, "level1.lvl");
 					Mix_PlayMusic(music, 0);
+					menu_set_play();
 					update_delta_time();
 					state = PLAYING;
 				}
@@ -266,10 +289,14 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
+	up_texture = texture_load(renderer, "up.png");
+	beat_textures[0] = up_texture;
 	left_texture = texture_load(renderer, "left.png");
-	beat_textures[0] = left_texture;
+	beat_textures[1] = left_texture;
 	right_texture = texture_load(renderer, "right.png");
-	beat_textures[1] = right_texture;
+	beat_textures[2] = right_texture;
+	down_texture = texture_load(renderer, "down.png");
+	beat_textures[3] = down_texture;
 	//up_texture = texture_load(renderer, "up.png");
 	//beat_textures[0] = up_texture;
 	//down_texture = texture_load(renderer, "down.png");
@@ -333,7 +360,7 @@ int main(int argc, char* argv[])
 	while (quit == FALSE)
 	{
 		update_delta_time();
-		update_music_delta();
+		//update_music_delta();
 
 		//input();
 
@@ -388,6 +415,8 @@ int main(int argc, char* argv[])
 
 		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[0].sprite);
 		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[1].sprite);
+		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[2].sprite);
+		SDL_RenderCopy(renderer, t_tx1, NULL, &level->tracks[3].sprite);
 
 		for (int i = 0; i < level->num_tracks; i++)
 		{
@@ -400,6 +429,8 @@ int main(int argc, char* argv[])
 				SDL_RenderCopy(renderer, beat_textures[i], NULL, &level->tracks[i].beats[j].sprite);
 			}
 		}
+
+		menu_render(renderer);
 
 		SDL_RenderPresent(renderer);
 	}

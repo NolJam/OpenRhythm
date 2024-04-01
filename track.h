@@ -1,7 +1,7 @@
 #ifndef TRACK_DEF
 #define TRACK_DEF
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdio.h>
 
 #include "globals.h"

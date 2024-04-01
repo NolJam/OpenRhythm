@@ -2,9 +2,9 @@
 
 SDL_Texture* font_texture = NULL;
 
-MenuItem play_button, quit_button, resume_button, exit_button;
+MenuItem play_button, quit_button, resume_button, exit_button, score_header, score_display;
 
-Menu main_menu, pause_menu;
+Menu main_menu, pause_menu, play_menu;
 
 Menu* cur_menu = &main_menu;
 //Menu menus = [ main_menu, pause_menu ];
@@ -73,6 +73,20 @@ void menu_init(SDL_Renderer* renderer)
 		.num_letters = 4,
 	};
 
+	score_header = (MenuItem){
+		.rect = (SDL_Rect){ 10, 10, 0, 0 },
+		.text = "SCORE",
+		.letters = NULL,
+		.num_letters = 5,
+	};
+
+	score_display = (MenuItem){
+		.rect = (SDL_Rect){ 200, 10, 0, 0 },
+		.text = "0",
+		.letters = NULL,
+		.num_letters = 1,
+	};
+
 	main_menu = (Menu) {
 		.menu_items = NULL,
 		.num_menu_items = 2,
@@ -80,6 +94,12 @@ void menu_init(SDL_Renderer* renderer)
 	};
 
 	pause_menu = (Menu) {
+		.menu_items = NULL,
+		.num_menu_items = 2,
+		.bkg_texture = NULL,
+	};
+
+	play_menu = (Menu){
 		.menu_items = NULL,
 		.num_menu_items = 2,
 		.bkg_texture = NULL,
@@ -93,6 +113,8 @@ void menu_init(SDL_Renderer* renderer)
 	}
 
 	//capitalize(play_button.text); // causing seg fault
+
+	// MAIN MENU
 	play_button.letters = malloc(sizeof(Letter));
 	play_button.letters = map_letter_coords(play_button.text, play_button.letters);
 
@@ -103,7 +125,7 @@ void menu_init(SDL_Renderer* renderer)
 	main_menu.menu_items[0] = play_button;
 	main_menu.menu_items[1] = quit_button;
 
-
+	// PAUSE MENU
 	resume_button.letters = malloc(sizeof(Letter));
 	resume_button.letters = map_letter_coords(resume_button.text, resume_button.letters);
 
@@ -114,7 +136,18 @@ void menu_init(SDL_Renderer* renderer)
 	pause_menu.menu_items[0] = resume_button;
 	pause_menu.menu_items[1] = exit_button;
 
-	printf("sizeof MenuItem: %zu\n\n", sizeof(MenuItem));
+	// PLAY MENU
+	score_header.letters = malloc(sizeof(Letter));
+	score_header.letters = map_letter_coords(score_header.text, score_header.letters);
+
+	score_display.letters = malloc(sizeof(Letter));
+	score_display.letters = map_letter_coords(score_display.text, score_display.letters);
+
+	play_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
+	play_menu.menu_items[0] = score_header;
+	play_menu.menu_items[1] = score_display;
+
+	//printf("sizeof MenuItem: %zu\n\n", sizeof(MenuItem));
 }
 
 int menu_click(int x, int y)
@@ -145,8 +178,6 @@ void menu_render_letters(SDL_Renderer* renderer, MenuItem* m)
 	SDL_Rect letter_rect = {
 		.x = m->rect.x + 20,
 		.y = m->rect.y + 20,
-		//.x = 100,
-		//.y = 100,
 		.w = 20,
 		.h = 20,
 	};
@@ -166,19 +197,21 @@ void menu_render(SDL_Renderer* renderer)
 	if (renderer == NULL) return;
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderClear(renderer);
+	if (cur_menu != &play_menu) SDL_RenderClear(renderer);
 	//printf("menu rendering...\n");
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
 	for (int i = 0; i < cur_menu->num_menu_items; i++)
 	{
-		SDL_RenderDrawRect(renderer, &cur_menu->menu_items[i].rect);
+		if (cur_menu != &play_menu) SDL_RenderDrawRect(renderer, &cur_menu->menu_items[i].rect);
 
 		menu_render_letters(renderer, &cur_menu->menu_items[i]);
+		//menu_render_letters(renderer, &score_display); // DEBUG DELETE SOON
 	}
 	
-	SDL_RenderPresent(renderer);
+	if (cur_menu != &play_menu) SDL_RenderPresent(renderer);
+	//else printf("num menu items: %d\n\n", play_menu.num_menu_items);
 }
 
 void menu_set_pause()
@@ -191,14 +224,33 @@ void menu_set_main()
 	cur_menu = &main_menu;
 }
 
+void menu_set_play()
+{
+	cur_menu = &play_menu;
+}
+
+void menu_update_score(int s)
+{
+	char str[512] = { 0 };
+	sprintf_s(str, (size_t)512, "%d", s);
+
+	score_display.num_letters = strlen(str);
+	score_display.letters = map_letter_coords(str, score_display.letters);
+
+	play_menu.menu_items[1] = score_display; // TODO: MAKE MENUS STORE POINTERS TO MENU ITEMS INSTEAD OF COPIES
+}
+
 void menu_quit()
 {
 	free(play_button.letters);
 	free(quit_button.letters);
 	free(resume_button.letters);
 	free(exit_button.letters);
+	free(score_header.letters);
+	free(score_display.letters);
 	//main_menu.menu_items = NULL;
 	SDL_DestroyTexture(font_texture);
 	free(main_menu.menu_items);
 	free(pause_menu.menu_items);
+	free(play_menu.menu_items);
 }

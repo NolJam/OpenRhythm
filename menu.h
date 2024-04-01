@@ -47,6 +47,10 @@ void menu_set_pause(); // set current meny to pause for menu_render func
 
 void menu_set_main(); // set current menu to main for menu_render func
 
+void menu_set_play(); // set cur menu to play_menu
+
+void menu_update_score(int s);
+
 void menu_quit();
 
 #endif
