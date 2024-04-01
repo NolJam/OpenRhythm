@@ -214,6 +214,14 @@ void menu_render(SDL_Renderer* renderer)
 	//else printf("num menu items: %d\n\n", play_menu.num_menu_items);
 }
 
+void menu_reset_score()
+{
+	score_display.num_letters = 1;
+	score_display.text = "0";
+	score_display.letters = map_letter_coords(score_display.text, score_display.letters);
+	play_menu.menu_items[1] = score_display;
+}
+
 void menu_set_pause()
 {
 	cur_menu = &pause_menu;
@@ -222,6 +230,7 @@ void menu_set_pause()
 void menu_set_main()
 {
 	cur_menu = &main_menu;
+	menu_reset_score();
 }
 
 void menu_set_play()
