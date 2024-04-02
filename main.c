@@ -398,8 +398,16 @@ int main(int argc, char* argv[])
 					level->tracks[i].cur_beat < level->tracks[i].num_beats)
             		{
                 		level->tracks[i].cur_beat++;
+						int game_over = score_miss_increment();
 						Mix_PlayChannel(-1, miss, 0);
                 		printf("beat missed\n\n");
+						if (game_over)
+						{
+							menu_set_main();
+							state = MAIN_MENU;
+							Mix_HaltMusic();
+							Mix_PlayChannel(-1, menuForward, 0);
+						}
             		}
         	}
 		//printf("beats' positions tracked\n\n");

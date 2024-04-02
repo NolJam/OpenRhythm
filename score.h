@@ -13,6 +13,10 @@ typedef enum BeatScore {
 	PERFECT,
 } BeatScore;
 
+int score_miss_increment();
+
+void score_miss_decrement();
+
 void score_increment(BeatScore s);
 
 void score_reset();
