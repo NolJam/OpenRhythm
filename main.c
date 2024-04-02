@@ -185,7 +185,8 @@ static void menu_input()
 				}
 
 				level_load(level, "level1.lvl");
-				Mix_PlayMusic(music, 0);
+				Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
+				//Mix_PlayMusic(music, 0);
 				menu_set_play();
 				update_delta_time();
 				state = PLAYING;
@@ -234,7 +235,10 @@ static void menu_input()
 				if (button == 0)
 				{
 					level_load(level, "level1.lvl");
-					Mix_PlayMusic(music, 0);
+					//printf("start pos: %f\n\n", level->start_pos);
+					//Mix_PlayMusic(music, 0);
+					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
+					printf("music pos playing: %f\n\n", Mix_GetMusicPosition(music));
 					menu_set_play();
 					update_delta_time();
 					state = PLAYING;
@@ -335,6 +339,8 @@ int main(int argc, char* argv[])
 
 	// LEVEL
 	level = malloc(sizeof(Level));
+
+	level->start_pos = 0.0;
 
 	for (int i = 0; i < 5; i++)
 	{

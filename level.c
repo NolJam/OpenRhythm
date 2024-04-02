@@ -4,6 +4,7 @@ const char* BEAT_FORMAT = "b %d %f\n"; // track, beat in measure
 const char* MEASURE_FORMAT = "m %d\n";
 const char* BPM_FORMAT = "> %f\n";
 const char* TRACK_FORMAT = "t %d %d\n"; // x, y
+const char* PRACTICE_FORMAT = "* %d\n"; // scan practice_pos
 
 void level_load(Level* lvl, char* file_name)
 {
@@ -21,6 +22,7 @@ void level_load(Level* lvl, char* file_name)
 	int beat_block = 10;
 	int track_index = 0;
 	int measure = 0;
+	int practice_pos = 0;
 
     for (int i = 0; i < 5; i++)
     {
@@ -106,18 +108,32 @@ void level_load(Level* lvl, char* file_name)
 			track_init(&lvl->tracks[track_index], track_x, track_y);
 			track_index++;
 		}
+		else if (line[0] == '*')
+		{
+			sscanf_s(line, PRACTICE_FORMAT, &practice_pos);
+			printf("practice pos: %d\n\n", practice_pos);
+			lvl->start_pos = 1.0 / (double)lvl->bpm * 60.0 * 4.0 * practice_pos;
+			printf("start pos: %f\n\n", lvl->start_pos);
+		}
 	}
 
-	//lvl->num_beats = n;
-	// printf("%d\n", lvl->num_beats);
-	// printf("bpm: %f\n", lvl->bpm);
-	//lvl->cur_beat = 0;
+	fclose(file);
 
 	lvl->speed = (SCREEN_WIDTH / 4000.0f) * (lvl->bpm / 60.0f);
 
 	lvl->num_tracks = track_index;
 
-	fclose(file);
+	if (lvl->start_pos > 0.0)
+	{
+		for (int i = 0; i < lvl->num_tracks; i++)
+		{
+			for (int j = 0; j < lvl->tracks[i].num_beats; j++)
+			{
+				lvl->tracks[i].beats[j].x -= lvl->speed * 1000 * (int)lvl->start_pos; // prac pos rounded bc mixer rounds start pos
+				if (lvl->tracks[i].beats[j].x < lvl->tracks[i].x) lvl->tracks[i].cur_beat++;
+			}
+		}
+	}
 }
 
 void level_free(Level* lvl)

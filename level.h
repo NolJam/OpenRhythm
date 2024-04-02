@@ -2,6 +2,7 @@
 #define LEVEL_DEF
 
 #include <stdio.h>
+#include <SDL_mixer.h>
 #include "globals.h"
 #include "beat.h"
 #include "track.h"
@@ -20,6 +21,7 @@ typedef struct Level {
 	int num_tracks;
 	float bpm;
 	float speed;
+	double start_pos;
 } Level;
 
 void level_load(Level* lvl, char* file_name);
