@@ -53,7 +53,7 @@ void level_load(Level* lvl, char* file_name)
 
 			sscanf_s(line, BEAT_FORMAT, &track_marker, &b);
 
-			if (b > 3.0f || b < 0.0f) continue;
+			if (b > 4.0f || b < 0.0f) continue;
 			if (track_marker > 4 || track_marker < 0) continue;
 
 			if (lvl->tracks[track_marker].num_beats == lvl->tracks[track_marker].beat_block)

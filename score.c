@@ -27,6 +27,12 @@ void score_miss_decrement()
 	printf("misses: %d\n\n", miss_streak);
 }
 
+void score_miss_reset()
+{
+	miss_streak = 0;
+	miss_repair = 0;
+}
+
 void score_increment(BeatScore s)
 {
 	level_score += (int)s;

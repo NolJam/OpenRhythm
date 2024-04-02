@@ -17,6 +17,8 @@ int score_miss_increment();
 
 void score_miss_decrement();
 
+void score_miss_reset();
+
 void score_increment(BeatScore s);
 
 void score_reset();

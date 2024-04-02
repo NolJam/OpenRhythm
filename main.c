@@ -200,6 +200,7 @@ static void menu_input()
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
+					score_miss_reset();
 					continue;
 				}
 
@@ -227,6 +228,7 @@ static void menu_input()
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
+					score_miss_reset();
 					continue;
 				}
 			}
@@ -386,6 +388,7 @@ int main(int argc, char* argv[])
 		if (Mix_PlayingMusic() == 0)
 		{
 			menu_set_main();
+			score_miss_reset();
 			state = MAIN_MENU;
 			Mix_PlayChannel(-1, menuForward, 0);
 		}
@@ -403,6 +406,7 @@ int main(int argc, char* argv[])
                 		printf("beat missed\n\n");
 						if (game_over)
 						{
+							score_miss_reset();
 							menu_set_main();
 							state = MAIN_MENU;
 							Mix_HaltMusic();
