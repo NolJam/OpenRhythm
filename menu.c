@@ -2,9 +2,10 @@
 
 SDL_Texture* font_texture = NULL;
 
-MenuItem play_button, quit_button, resume_button, exit_button, score_header, score_display;
+MenuItem play_button, quit_button, resume_button, exit_button, level1, level2, level3,
+	score_header, score_display;
 
-Menu main_menu, pause_menu, play_menu;
+Menu main_menu, pause_menu, level_menu, play_menu;
 
 Menu* cur_menu = &main_menu;
 //Menu menus = [ main_menu, pause_menu ];
@@ -73,6 +74,27 @@ void menu_init(SDL_Renderer* renderer)
 		.num_letters = 4,
 	};
 
+	level1 = (MenuItem){
+		.rect = (SDL_Rect){ 100, 50, 300, 100 },
+		.text = "LEVEL1",
+		.letters = NULL,
+		.num_letters = 6,
+	};
+
+	level2 = (MenuItem){
+		.rect = (SDL_Rect){ 100, 200, 300, 100 },
+		.text = "LEVEL2",
+		.letters = NULL,
+		.num_letters = 6,
+	};
+
+	level3 = (MenuItem){
+		.rect = (SDL_Rect){ 100, 350, 300, 100 },
+		.text = "LEVEL3",
+		.letters = NULL,
+		.num_letters = 6,
+	};
+
 	score_header = (MenuItem){
 		.rect = (SDL_Rect){ 10, 10, 0, 0 },
 		.text = "SCORE",
@@ -96,6 +118,12 @@ void menu_init(SDL_Renderer* renderer)
 	pause_menu = (Menu) {
 		.menu_items = NULL,
 		.num_menu_items = 2,
+		.bkg_texture = NULL,
+	};
+
+	level_menu = (Menu){
+		.menu_items = NULL,
+		.num_menu_items = 3,
 		.bkg_texture = NULL,
 	};
 
@@ -135,6 +163,21 @@ void menu_init(SDL_Renderer* renderer)
 	pause_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	pause_menu.menu_items[0] = resume_button;
 	pause_menu.menu_items[1] = exit_button;
+
+	// LEVEL MENU
+	level1.letters = malloc(sizeof(Letter));
+	level1.letters = map_letter_coords(level1.text, level1.letters);
+
+	level2.letters = malloc(sizeof(Letter));
+	level2.letters = map_letter_coords(level2.text, level2.letters);
+
+	level3.letters = malloc(sizeof(Letter));
+	level3.letters = map_letter_coords(level3.text, level3.letters);
+
+	level_menu.menu_items = malloc((size_t)3 * sizeof(MenuItem));
+	level_menu.menu_items[0] = level1;
+	level_menu.menu_items[1] = level2;
+	level_menu.menu_items[2] = level3;
 
 	// PLAY MENU
 	score_header.letters = malloc(sizeof(Letter));
@@ -233,6 +276,11 @@ void menu_set_main()
 	menu_reset_score();
 }
 
+void menu_set_level()
+{
+	cur_menu = &level_menu;
+}
+
 void menu_set_play()
 {
 	cur_menu = &play_menu;
@@ -255,11 +303,15 @@ void menu_quit()
 	free(quit_button.letters);
 	free(resume_button.letters);
 	free(exit_button.letters);
+	free(level1.letters);
+	free(level2.letters);
+	free(level3.letters);
 	free(score_header.letters);
 	free(score_display.letters);
 	//main_menu.menu_items = NULL;
 	SDL_DestroyTexture(font_texture);
 	free(main_menu.menu_items);
 	free(pause_menu.menu_items);
+	free(level_menu.menu_items);
 	free(play_menu.menu_items);
 }

@@ -10,6 +10,7 @@
 typedef enum GameState {
 	PLAYING,
 	MAIN_MENU,
+	LEVEL_SELECT,
 	PAUSED,
 } GameState;
 

@@ -19,7 +19,7 @@ int score_miss_increment()
 void score_miss_decrement()
 {
 	miss_repair++;
-	if (miss_streak > 0 && miss_repair == 2)
+	if (miss_streak > 0 && miss_repair > 1)
 	{
 		miss_streak--;
 		miss_repair = 0;
