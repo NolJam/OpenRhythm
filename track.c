@@ -20,8 +20,8 @@ void track_init(Track* t, int x, int y)
 
 	t->x = x;
 	t->y = y;
-	t->sprite.x = t->x;
-	t->sprite.y = t->y;
+	t->sprite.x = t->x - 8;
+	t->sprite.y = t->y - 8;
 	t->sprite.w = 80;
 	t->sprite.h = 80;
 }

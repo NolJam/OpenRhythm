@@ -201,6 +201,8 @@ static void menu_input()
 				{
 					score_reset();
 					Mix_HaltMusic();
+					Mix_FreeMusic(music);
+					music = NULL;
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
@@ -229,6 +231,8 @@ static void menu_input()
 				{
 					score_reset();
 					Mix_HaltMusic();
+					Mix_FreeMusic(music);
+					music = NULL;
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
 					menu_set_main();
@@ -429,6 +433,8 @@ int main(int argc, char* argv[])
 
 		if (Mix_PlayingMusic() == 0)
 		{
+			Mix_FreeMusic(music);
+			music = NULL;
 			menu_set_main();
 			score_miss_reset();
 			score_reset();
@@ -511,7 +517,7 @@ int main(int argc, char* argv[])
 	menu_quit();
 
 	Mix_CloseAudio();
-	Mix_FreeMusic(music);
+	if (music != NULL) Mix_FreeMusic(music);
 	music = NULL;
 	Mix_FreeChunk(hitGood);
 	hitGood = NULL;

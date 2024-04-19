@@ -36,7 +36,7 @@ Letter* map_letter_coords(char* s, Letter* letters)
 		letters[i].texture_coord = j;
 		letters[i].texture_coord *= 8;
 
-		printf("letter_coord %d: %d\n", i, letters[i].texture_coord);
+		//printf("letter_coord %d: %d\n", i, letters[i].texture_coord);
 	}
 
 	return letters;
@@ -200,7 +200,7 @@ int menu_click(int x, int y)
 		if (x > cur_menu->menu_items[i].rect.x && x < cur_menu->menu_items[i].rect.x + cur_menu->menu_items[i].rect.w &&
 				y > cur_menu->menu_items[i].rect.y && y < cur_menu->menu_items[i].rect.y + cur_menu->menu_items[i].rect.h)
 		{
-			printf("menu item clicked\n\n");
+			//printf("menu item clicked\n\n");
 			return i;
 		}
 	}

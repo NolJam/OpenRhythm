@@ -14,7 +14,7 @@ void level_load(Level* lvl, char* file_name)
 	if (file == NULL)
 	{
 		printf("file could not be opened.\n\n");
-		exit(1);
+		return;
 	}
 
 	char line[1024];
@@ -32,23 +32,17 @@ void level_load(Level* lvl, char* file_name)
 
         lvl->tracks[i].cur_beat = 0;
 
-	lvl->tracks[i].num_beats = 0;
+		lvl->tracks[i].num_beats = 0;
 
-	lvl->tracks[i].beat_block = 10;
-
-	//printf("index: %d\n", i);
-	//printf("track beats realloc'd\n\n");
-	//printf("beat block: %d\n\n", lvl->tracks[i].beat_block);
+		lvl->tracks[i].beat_block = beat_block;
     }
 
 	while (fgets(line, sizeof(line), file))
 	{
 		if (line[0] == 'b')
 		{
-			//int track_marker = 0;
 			float b = 0.0f;
 
-            //int track_marker = line[2] - '0';
 			int track_marker = 0;
 
 			sscanf_s(line, BEAT_FORMAT, &track_marker, &b);
@@ -58,21 +52,11 @@ void level_load(Level* lvl, char* file_name)
 
 			if (lvl->tracks[track_marker].num_beats == lvl->tracks[track_marker].beat_block)
 			{
-				//printf("incrementing beats mem.\n");
 				lvl->tracks[track_marker].beat_block += 10;
 				Beat* ptr = realloc(lvl->tracks[track_marker].beats, (size_t)(lvl->tracks[track_marker].beat_block) * sizeof(Beat));
 				if (ptr == NULL) exit(1);
 				lvl->tracks[track_marker].beats = ptr;
-				//printf("track marker: %d\n", track_marker);
-				//printf("beat address: %p\n", lvl->tracks[track_marker].beats);
 			}
-
-			//int measure = 0;
-			//float b = 0.0f;
-			//int track_marker = 0; // defined earlier
-			//sscanf_s(line, BEAT_FORMAT, &track_marker, &b);
-			//printf("beat value: %f\n", b);
-			//printf("^track marker: %d\n\n", track_marker);
 
 			Beat load_beat;
 
@@ -81,21 +65,18 @@ void level_load(Level* lvl, char* file_name)
 			load_beat.x += measure * SCREEN_WIDTH;
 
 			load_beat.x += lvl->tracks[track_marker].x;
-			load_beat.y = lvl->tracks[track_marker].y + 8;
+			load_beat.y = lvl->tracks[track_marker].y;
 
 			load_beat.sprite.w = 64;
 			load_beat.sprite.h = 64;
 
 			lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats] = load_beat;
 
-			//printf("%f\n\n", lvl->tracks[track_marker].beats[lvl->tracks[track_marker].num_beats].x);
-
 			lvl->tracks[track_marker].num_beats++;
 		}
 		else if (line[0] == 'm')
 		{
 			sscanf_s(line, MEASURE_FORMAT, &measure);
-			//printf("writing measure: %d\n\n", measure);
 		}
 		else if (line[0] == '>')
 		{
@@ -118,6 +99,7 @@ void level_load(Level* lvl, char* file_name)
 	}
 
 	fclose(file);
+	file = NULL;
 
 	lvl->speed = (SCREEN_WIDTH / 4000.0f) * (lvl->bpm / 60.0f);
 
