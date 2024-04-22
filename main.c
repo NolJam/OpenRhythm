@@ -79,7 +79,7 @@ static void update_delta_time()
 
         // if (delta_time > MAX_DT) delta_time = MAX_DT;
 
-        if (delta_time < 8) SDL_Delay(8 - delta_time);
+        if (delta_time < 4) SDL_Delay(4 - delta_time); // MAYBE LIMIT FPS
 }
 
 static void update_music_delta()
@@ -534,6 +534,12 @@ int main(int argc, char* argv[])
 	up_texture = NULL;
 	SDL_DestroyTexture(down_texture);
 	down_texture = NULL;
+	SDL_DestroyTexture(left_texture);
+	left_texture = NULL;
+	SDL_DestroyTexture(right_texture);
+	right_texture = NULL;
+	SDL_DestroyTexture(t_tx1);
+	t_tx1 = NULL;
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
