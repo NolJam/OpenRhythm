@@ -3,3 +3,5 @@ OpenRhythm is an open-sourced game engine for easily creating rhythm games. It i
 The engine currently features a custom plain text .lvl level file format. 
 
 The current focus of development is moving away from hard-coded level selection towards dynamic level listing & selection.
+
+Releases for Linux and Mac are coming soon.
