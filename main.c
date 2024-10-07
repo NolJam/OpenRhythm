@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include "globals.h"
 #include "beat.h"
@@ -8,6 +9,7 @@
 #include "level.h"
 #include "menu.h"
 #include "score.h"
+#include "text.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
@@ -125,7 +127,7 @@ static void input()
 						continue;
 					}
 					//printf("cur beat: %d\n\n", level->cur_beat);
-					else printf("no beat hit.\n\n");
+					//else printf("no beat hit.\n\n");
 				}
 				else if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
 				{
@@ -137,7 +139,7 @@ static void input()
 						continue;
 					}
 					//printf("cur beat: %d\n\n", level->cur_beat);
-					else printf("no beat hit.\n\n");
+					//else printf("no beat hit.\n\n");
 				}
 				else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
 				{
@@ -148,7 +150,7 @@ static void input()
 
 						continue;
 					}
-					else printf("no beat hit.\n\n");
+					//else printf("no beat hit.\n\n");
 				}
 				else if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s)
 				{
@@ -159,7 +161,7 @@ static void input()
 
 						continue;
 					}
-					else printf("no beat hit.\n\n");
+					//else printf("no beat hit.\n\n");
 				}
 			}
 		else if (e.type == SDL_WINDOWEVENT)
@@ -205,7 +207,7 @@ static void menu_input()
 					music = NULL;
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
-					menu_set_main();
+					menu_set_main(renderer);
 					score_miss_reset();
 					continue;
 				}
@@ -235,7 +237,7 @@ static void menu_input()
 					music = NULL;
 					Mix_PlayChannel(-1, menuForward, 0);
 					state = MAIN_MENU;
-					menu_set_main();
+					menu_set_main(renderer);
 					score_miss_reset();
 					continue;
 				}
@@ -307,6 +309,10 @@ static void menu_input()
 		else if (e.type == SDL_QUIT) quit = TRUE;
 	}
 }
+
+// ============================================================================================================================
+// =========================================================MAIN===============================================================
+// ============================================================================================================================
 
 int main(int argc, char* argv[])
 {
@@ -391,6 +397,9 @@ int main(int argc, char* argv[])
 	menuBack = Mix_LoadWAV("menuBack.wav");
 	Mix_VolumeChunk(menuBack, 64);
 
+	// TTF
+	text_init();
+
 	// LEVEL
 	level = malloc(sizeof(Level));
 
@@ -401,17 +410,17 @@ int main(int argc, char* argv[])
         Beat* ptr = calloc(10, sizeof(Beat));
         if (ptr == NULL) exit(1);
         level->tracks[i].beats = ptr;
-	printf("%f\n", level->tracks[i].beats[0].x);
+		//printf("%f\n", level->tracks[i].beats[0].x);
 	}
 
 	//level_load(level, "level1.lvl");
 
-	printf("BPM: %f\n\n", level->bpm);
+	//printf("BPM: %f\n\n", level->bpm);
 
 	menu_init(renderer);
 
-	printf("update loop starting.\n\n");
-	printf("makefile test\n\n");
+	//printf("update loop starting.\n\n");
+	//printf("makefile test\n\n");
 
 	menu_render(renderer);
 
@@ -435,7 +444,7 @@ int main(int argc, char* argv[])
 		{
 			Mix_FreeMusic(music);
 			music = NULL;
-			menu_set_main();
+			menu_set_main(renderer);
 			score_miss_reset();
 			score_reset();
 			state = MAIN_MENU;
@@ -453,12 +462,12 @@ int main(int argc, char* argv[])
 						int game_over = score_miss_increment();
 						Mix_HaltChannel(-1);
 						Mix_PlayChannel(-1, miss, 0);
-                		printf("beat missed\n\n");
+                		//printf("beat missed\n\n");
 						if (game_over)
 						{
 							score_miss_reset();
 							score_reset();
-							menu_set_main();
+							menu_set_main(renderer);
 							state = MAIN_MENU;
 							Mix_HaltMusic();
 							Mix_HaltChannel(-1);
@@ -480,7 +489,7 @@ int main(int argc, char* argv[])
 		//printf("beats moved\n\n");
 		//printf("%f\n", level->beats[0].x);
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 100, 100, 255, 255);
 		SDL_RenderClear(renderer);
 
 		//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -515,6 +524,8 @@ int main(int argc, char* argv[])
 	level_free(level);
 
 	menu_quit();
+
+	text_quit();
 
 	Mix_CloseAudio();
 	if (music != NULL) Mix_FreeMusic(music);

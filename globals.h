@@ -7,6 +7,11 @@
 #define SCREEN_WIDTH 1024 // 32 32-pix chunks
 #define SCREEN_HEIGHT 576 // 18 32-pix chunks
 
+#include <SDL.h>
+//#include <SDL_image.h>
+
+extern SDL_Renderer* renderer;
+
 typedef enum GameState {
 	PLAYING,
 	MAIN_MENU,

@@ -5,10 +5,12 @@
 #include <string.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include "text.h"
+#include "globals.h"
 
 //SDL_Texture* font_texture;
 
-typedef struct Letter {
+typedef struct Letter {  // vestigial
 	int x;
 	int y;
 	SDL_Rect rect;
@@ -18,8 +20,9 @@ typedef struct Letter {
 typedef struct MenuItem {
 	SDL_Rect rect;
 	char* text;
-	Letter* letters;
-	int num_letters;
+	Letter* letters; // vestigial
+	int num_letters; // vestigial
+	SDL_Texture* text_texture;
 } MenuItem;
 
 typedef struct Menu {
