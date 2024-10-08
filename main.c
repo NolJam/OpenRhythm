@@ -323,7 +323,8 @@ int main(int argc, char* argv[])
 	}
 
 	window = SDL_CreateWindow("Rhythm Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
+	//SDL_SetWindowSize(window, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 
 	if (window == NULL)
 	{
@@ -336,6 +337,9 @@ int main(int argc, char* argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	SDL_RendererInfo r_info;
 	SDL_GetRendererInfo(renderer, &r_info);
+
+	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//SDL_RenderSetScale(renderer, (float)LOGICAL_WIDTH / (float)SCREEN_WIDTH, (float)LOGICAL_HEIGHT / (float)SCREEN_HEIGHT);
 
 	if (renderer == NULL)
 	{

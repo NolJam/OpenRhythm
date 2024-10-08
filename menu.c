@@ -80,7 +80,7 @@ void menu_init(SDL_Renderer* renderer)
 
 	level1 = (MenuItem){
 		.rect = (SDL_Rect){ 100, 50, 300, 100 },
-		.text = "LEVEL1",
+		.text = "LEVEL 1",
 		.letters = NULL,
 		.num_letters = 6,
 		.text_texture = NULL,
@@ -88,7 +88,7 @@ void menu_init(SDL_Renderer* renderer)
 
 	level2 = (MenuItem){
 		.rect = (SDL_Rect){ 100, 200, 300, 100 },
-		.text = "LEVEL2",
+		.text = "LEVEL 2",
 		.letters = NULL,
 		.num_letters = 6,
 		.text_texture = NULL,
@@ -96,7 +96,7 @@ void menu_init(SDL_Renderer* renderer)
 
 	level3 = (MenuItem){
 		.rect = (SDL_Rect){ 100, 350, 300, 100 },
-		.text = "LEVEL3",
+		.text = "LEVEL 3",
 		.letters = NULL,
 		.num_letters = 6,
 		.text_texture = NULL,
@@ -152,14 +152,19 @@ void menu_init(SDL_Renderer* renderer)
 	//capitalize(play_button.text); // causing seg fault
 
 	// MAIN MENU
+	// 
 	//play_button.letters = malloc(sizeof(Letter));
 	//play_button.letters = map_letter_coords(play_button.text, play_button.letters);
 	play_button.text_texture = text_create_texture(play_button.text);
+	play_button.text_width = text_get_width();
+	play_button.text_height = text_get_height();
 	//printf("Play Button Text Texture: %p\n\n", play_button.text_texture);
 
 	//quit_button.letters = malloc(sizeof(Letter));
 	//quit_button.letters = map_letter_coords(quit_button.text, quit_button.letters);
 	quit_button.text_texture = text_create_texture(quit_button.text);
+	quit_button.text_width = text_get_width();
+	quit_button.text_height = text_get_height();
 
 	main_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	main_menu.menu_items[0] = play_button;
@@ -169,10 +174,14 @@ void menu_init(SDL_Renderer* renderer)
 	//resume_button.letters = malloc(sizeof(Letter));
 	//resume_button.letters = map_letter_coords(resume_button.text, resume_button.letters);
 	resume_button.text_texture = text_create_texture(resume_button.text);
+	resume_button.text_width = text_get_width();
+	resume_button.text_height = text_get_height();
 
 	//exit_button.letters = malloc(sizeof(Letter));
 	//exit_button.letters = map_letter_coords(exit_button.text, exit_button.letters);
 	exit_button.text_texture = text_create_texture(exit_button.text);
+	exit_button.text_width = text_get_width();
+	exit_button.text_height = text_get_height();
 
 	pause_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	pause_menu.menu_items[0] = resume_button;
@@ -182,14 +191,20 @@ void menu_init(SDL_Renderer* renderer)
 	//level1.letters = malloc(sizeof(Letter));
 	//level1.letters = map_letter_coords(level1.text, level1.letters);
 	level1.text_texture = text_create_texture(level1.text);
+	level1.text_width = text_get_width();
+	level1.text_height = text_get_height();
 
 	//level2.letters = malloc(sizeof(Letter));
 	//level2.letters = map_letter_coords(level2.text, level2.letters);
 	level2.text_texture = text_create_texture(level2.text);
+	level2.text_width = text_get_width();
+	level2.text_height = text_get_height();
 
 	//level3.letters = malloc(sizeof(Letter));
 	//level3.letters = map_letter_coords(level3.text, level3.letters);
 	level3.text_texture = text_create_texture(level3.text);
+	level3.text_width = text_get_width();
+	level3.text_height = text_get_height();
 
 	level_menu.menu_items = malloc((size_t)3 * sizeof(MenuItem));
 	level_menu.menu_items[0] = level1;
@@ -200,10 +215,14 @@ void menu_init(SDL_Renderer* renderer)
 	//score_header.letters = malloc(sizeof(Letter));
 	//score_header.letters = map_letter_coords(score_header.text, score_header.letters);
 	score_header.text_texture = text_create_texture(score_header.text);
+	score_header.text_width = text_get_width();
+	score_header.text_height = text_get_height();
 
 	//score_display.letters = malloc(sizeof(Letter));
 	//score_display.letters = map_letter_coords(score_display.text, score_display.letters);
 	score_display.text_texture = text_create_texture(score_display.text);
+	score_display.text_width = text_get_width();
+	score_display.text_height = text_get_height();
 
 	play_menu.menu_items = malloc((size_t)2 * sizeof(MenuItem));
 	play_menu.menu_items[0] = score_header;
@@ -270,7 +289,10 @@ void menu_render(SDL_Renderer* renderer)
 
 		//menu_render_letters(renderer, &cur_menu->menu_items[i]);
 		//if (cur_menu->menu_items[i].text_texture == NULL) printf("text texture is NULL\n\n");
-		int s = SDL_RenderCopy(renderer, cur_menu->menu_items[i].text_texture, NULL, &cur_menu->menu_items[i].rect);
+		SDL_Rect temp_rect = (SDL_Rect){ cur_menu->menu_items[i].rect.x, cur_menu->menu_items[i].rect.y,
+			cur_menu->menu_items[i].text_width, cur_menu->menu_items[i].text_height };
+
+		int s = SDL_RenderCopy(renderer, cur_menu->menu_items[i].text_texture, NULL, &temp_rect);
 		if (s == -1) printf("Rendering error: %s\n", SDL_GetError());
 	}
 	
@@ -284,6 +306,8 @@ static void menu_reset_score()
 	score_display.text = "0";
 	//score_display.letters = map_letter_coords(score_display.text, score_display.letters);
 	score_display.text_texture = text_update_texture(score_display.text_texture, score_display.text);
+	score_display.text_width = text_get_width();
+	score_display.text_height = text_get_height();
 	play_menu.menu_items[1] = score_display;
 }
 
@@ -317,7 +341,9 @@ void menu_update_score(int s)
 	//score_display.letters = map_letter_coords(str, score_display.letters);
 
 	score_display.text_texture = text_update_texture(score_display.text_texture, str);
-	score_display.rect.w = 50 * score_display.num_letters;
+	score_display.text_width = text_get_width();
+	score_display.text_height = text_get_height();
+	//score_display.rect.w = 50 * score_display.num_letters;
 
 	play_menu.menu_items[1] = score_display; // TODO: MAKE MENUS STORE POINTERS TO MENU ITEMS INSTEAD OF COPIES
 }

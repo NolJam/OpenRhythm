@@ -4,8 +4,11 @@
 #define FALSE 0
 #define TRUE 1
 
-#define SCREEN_WIDTH 1024 // 32 32-pix chunks
-#define SCREEN_HEIGHT 576 // 18 32-pix chunks
+#define SCREEN_WIDTH 1920 // 32 32-pix chunks
+#define SCREEN_HEIGHT 1080 // 18 32-pix chunks
+
+#define LOGICAL_WIDTH 1024
+#define LOGICAL_HEIGHT 576
 
 #include <SDL.h>
 //#include <SDL_image.h>

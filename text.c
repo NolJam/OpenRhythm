@@ -2,6 +2,9 @@
 
 int text_init()
 {
+	temp_text_width = 0;
+	temp_text_height = 0;
+
 	int r = 0;
 
 	r = TTF_Init();
@@ -27,6 +30,9 @@ SDL_Texture* text_create_texture(const char* s)
 
 	if (text_texture == NULL) printf("text texture could not be created\n\n");
 
+	temp_text_width = text_surface->w;
+	temp_text_height = text_surface->h;
+
 	SDL_FreeSurface(text_surface);
 
 	//printf("texture adress: %p\n\n", text_texture);
@@ -45,9 +51,22 @@ SDL_Texture* text_update_texture(SDL_Texture* t, const char* s)
 
 	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
 
+	temp_text_width = text_surface->w;
+	temp_text_height = text_surface->h;
+
 	SDL_FreeSurface(text_surface);
 
 	return text_texture;
+}
+
+int text_get_width()
+{
+	return temp_text_width;
+}
+
+int text_get_height()
+{
+	return temp_text_height;
 }
 
 void text_quit()

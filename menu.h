@@ -23,6 +23,8 @@ typedef struct MenuItem {
 	Letter* letters; // vestigial
 	int num_letters; // vestigial
 	SDL_Texture* text_texture;
+	int text_width;
+	int text_height;
 } MenuItem;
 
 typedef struct Menu {
