@@ -29,7 +29,7 @@ typedef struct Level {
 
 void level_init();
 
-void level_load(Level* lvl, char* file_name);
+void level_load(Level* lvl, int lvl_num);
 
 void level_free(Level* lvl);
 

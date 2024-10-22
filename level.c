@@ -24,11 +24,11 @@ void level_init()
 	return;
 }
 
-void level_load(Level* lvl, char* file_name)
+void level_load(Level* lvl, int lvl_num)
 {
 	if (lvl == NULL) return;
 
-	FILE* file = fopen(file_name, "r");
+	FILE* file = fopen(level_names[lvl_num], "r");
 	if (file == NULL)
 	{
 		printf("file could not be opened.\n\n");

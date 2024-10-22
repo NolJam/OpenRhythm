@@ -191,7 +191,7 @@ static void menu_input()
 					continue;
 				}
 
-				level_load(level, "level1.lvl");
+				level_load(level, 0);
 				Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 				//Mix_PlayMusic(music, 0);
 				menu_set_play();
@@ -264,7 +264,7 @@ static void menu_input()
 						exit(1);
 					}
 
-					level_load(level, "level1.lvl");
+					level_load(level, 0);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 					printf("music pos playing: %f\n\n", Mix_GetMusicPosition(music));
 					menu_set_play();
@@ -280,7 +280,7 @@ static void menu_input()
 						exit(1);
 					}
 
-					level_load(level, "level2.lvl");
+					level_load(level, 1);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 					menu_set_play();
 					update_delta_time();
@@ -295,7 +295,7 @@ static void menu_input()
 						exit(1);
 					}
 
-					level_load(level, "level3.lvl");
+					level_load(level, 2);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 					menu_set_play();
 					update_delta_time();
