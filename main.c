@@ -10,6 +10,7 @@
 #include "menu.h"
 #include "score.h"
 #include "text.h"
+#include "files.h"
 
 Uint64 last_ticks = 0;
 Uint64 cur_ticks = 0;
@@ -316,6 +317,10 @@ static void menu_input()
 
 int main(int argc, char* argv[])
 {
+	//LPWSTR cur_directory = NULL;
+	//GetCurrentDirectory(1024, cur_directory);
+	files_list_levels("C:\\Program Files\\Nolan Jameson\\OpenRhythm");
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		printf("SDL could not initialize: %s\n", SDL_GetError());
