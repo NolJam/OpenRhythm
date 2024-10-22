@@ -6,6 +6,8 @@
 #include <tchar.h>
 #include "globals.h"
 
-int files_list_levels(const char* sDir);
+int files_list_levels(const char* sDir); // debug
+
+int files_get_levels(char** level_names);
 
 #endif 

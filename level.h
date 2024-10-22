@@ -7,6 +7,9 @@
 #include "beat.h"
 #include "track.h"
 #include "score.h"
+#include "files.h"
+
+char** level_names;
 
 extern const char* BEAT_FORMAT;
 extern const char* MEASURE_FORMAT;
@@ -23,6 +26,8 @@ typedef struct Level {
 	float speed;
 	double start_pos;
 } Level;
+
+void level_init();
 
 void level_load(Level* lvl, char* file_name);
 

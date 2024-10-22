@@ -6,6 +6,24 @@ const char* BPM_FORMAT = "> %f\n";
 const char* TRACK_FORMAT = "t %d %d\n"; // x, y
 const char* PRACTICE_FORMAT = "* %d\n"; // scan practice_pos
 
+void level_init()
+{
+	level_names = malloc(sizeof(char*) * MAX_LEVELS);
+	if (level_names == NULL) exit(-1);
+
+	for (int i = 0; i < MAX_LEVELS; ++i)
+	{
+		level_names[i] = malloc(sizeof(char) * 2048);
+		strcpy_s(level_names[i], 2048, "");
+	}
+
+	files_get_levels(level_names);
+
+	printf("First Returned Level Name: %s\n\n", level_names[0]);
+
+	return;
+}
+
 void level_load(Level* lvl, char* file_name)
 {
 	if (lvl == NULL) return;
@@ -128,6 +146,13 @@ void level_free(Level* lvl)
 		free(lvl->tracks[i].beats);
 		lvl->tracks[i].beats = NULL;
 	}
+
+	//for (int i = 0; i < MAX_LEVELS; i++)
+	//{
+	//	if (level_names == NULL || level_names[i] == NULL) continue;
+	//	free(level_names[i]);
+	//}
+	//if (level_names != NULL) free(level_names);
 
 	free(lvl);
 }

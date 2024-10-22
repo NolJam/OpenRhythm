@@ -319,7 +319,8 @@ int main(int argc, char* argv[])
 {
 	//LPWSTR cur_directory = NULL;
 	//GetCurrentDirectory(1024, cur_directory);
-	files_list_levels("C:\\Program Files\\Nolan Jameson\\OpenRhythm");
+	//files_list_levels("C:\\Program Files\\Nolan Jameson\\OpenRhythm");
+	files_list_levels(".\\");
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -422,14 +423,10 @@ int main(int argc, char* argv[])
 		//printf("%f\n", level->tracks[i].beats[0].x);
 	}
 
-	//level_load(level, "level1.lvl");
+	level_init();
 
-	//printf("BPM: %f\n\n", level->bpm);
-
+	// MENU
 	menu_init(renderer);
-
-	//printf("update loop starting.\n\n");
-	//printf("makefile test\n\n");
 
 	menu_render(renderer);
 

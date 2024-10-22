@@ -10,6 +10,8 @@
 #define LOGICAL_WIDTH 1024
 #define LOGICAL_HEIGHT 576
 
+#define MAX_LEVELS 10
+
 #include <SDL.h>
 //#include <SDL_image.h>
 
