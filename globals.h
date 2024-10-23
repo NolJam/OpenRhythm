@@ -17,6 +17,9 @@
 
 extern SDL_Renderer* renderer;
 
+extern char** level_names;
+extern char** song_names;
+
 typedef enum GameState {
 	PLAYING,
 	MAIN_MENU,

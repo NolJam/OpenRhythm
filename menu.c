@@ -190,19 +190,19 @@ void menu_init(SDL_Renderer* renderer)
 	// LEVEL MENU
 	//level1.letters = malloc(sizeof(Letter));
 	//level1.letters = map_letter_coords(level1.text, level1.letters);
-	level1.text_texture = text_create_texture(level1.text);
+	level1.text_texture = text_create_texture(level_names[0]);
 	level1.text_width = text_get_width();
 	level1.text_height = text_get_height();
 
 	//level2.letters = malloc(sizeof(Letter));
 	//level2.letters = map_letter_coords(level2.text, level2.letters);
-	level2.text_texture = text_create_texture(level2.text);
+	level2.text_texture = text_create_texture(level_names[1]);
 	level2.text_width = text_get_width();
 	level2.text_height = text_get_height();
 
 	//level3.letters = malloc(sizeof(Letter));
 	//level3.letters = map_letter_coords(level3.text, level3.letters);
-	level3.text_texture = text_create_texture(level3.text);
+	level3.text_texture = text_create_texture(level_names[2]);
 	level3.text_width = text_get_width();
 	level3.text_height = text_get_height();
 

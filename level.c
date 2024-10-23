@@ -5,6 +5,10 @@ const char* MEASURE_FORMAT = "m %d\n";
 const char* BPM_FORMAT = "> %f\n";
 const char* TRACK_FORMAT = "t %d %d\n"; // x, y
 const char* PRACTICE_FORMAT = "* %d\n"; // scan practice_pos
+const char* SONG_NAME_FORMAT = "s %s\n";
+
+char** level_names = NULL;
+char** song_names = NULL;
 
 void level_init()
 {
@@ -13,8 +17,19 @@ void level_init()
 
 	for (int i = 0; i < MAX_LEVELS; ++i)
 	{
-		level_names[i] = malloc(sizeof(char) * 2048);
-		strcpy_s(level_names[i], 2048, "");
+		level_names[i] = calloc((size_t)2048, sizeof(char));
+		//level_names[i] = malloc(sizeof(char) * 2048);
+		//strcpy_s(level_names[i], 2048, "");
+	}
+
+	song_names = malloc(sizeof(char*) * MAX_LEVELS);
+	if (song_names == NULL) exit(-1);
+
+	for (int i = 0; i < MAX_LEVELS; ++i)
+	{
+		song_names[i] = calloc((size_t)2048, sizeof(char));
+		//song_names[i] = malloc(sizeof(char) * 2048);
+		//strcpy_s(song_names[i], 2048, "");
 	}
 
 	files_get_levels(level_names);
@@ -96,6 +111,15 @@ void level_load(Level* lvl, int lvl_num)
 		{
 			sscanf_s(line, MEASURE_FORMAT, &measure);
 		}
+		else if (line[0] == 's')
+		{
+			char* pch = NULL;
+			char* pch2 = NULL;
+			pch = strtok_s(line+2, "\n", &pch2);
+
+			strcpy_s(song_names[lvl_num], 2048, pch);
+			printf("Song name from level file: %s\n\n", song_names[lvl_num]);
+		}
 		else if (line[0] == '>')
 		{
 			sscanf_s(line, BPM_FORMAT, &lvl->bpm);
@@ -136,6 +160,11 @@ void level_load(Level* lvl, int lvl_num)
 	}
 }
 
+char* level_get_name(int lvl_num)
+{
+	return level_names[lvl_num];
+}
+
 void level_free(Level* lvl)
 {
 	if (lvl == NULL) return;
@@ -147,12 +176,19 @@ void level_free(Level* lvl)
 		lvl->tracks[i].beats = NULL;
 	}
 
-	//for (int i = 0; i < MAX_LEVELS; i++)
-	//{
-	//	if (level_names == NULL || level_names[i] == NULL) continue;
-	//	free(level_names[i]);
-	//}
-	//if (level_names != NULL) free(level_names);
+	for (int i = 0; i < MAX_LEVELS; i++)
+	{
+		if (level_names[i] == NULL) continue;
+		free(level_names[i]);
+	}
+	if (level_names != NULL) free(level_names);
+
+	for (int i = 0; i < MAX_LEVELS; i++)
+	{
+		if (song_names[i] == NULL) continue;
+		free(song_names[i]);
+	}
+	if (song_names != NULL) free(song_names);
 
 	free(lvl);
 }

@@ -9,7 +9,7 @@
 #include "score.h"
 #include "files.h"
 
-char** level_names;
+//char** level_names;
 
 extern const char* BEAT_FORMAT;
 extern const char* MEASURE_FORMAT;
@@ -30,6 +30,8 @@ typedef struct Level {
 void level_init();
 
 void level_load(Level* lvl, int lvl_num);
+
+char* level_get_name(int lvl_num);
 
 void level_free(Level* lvl);
 

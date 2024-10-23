@@ -180,25 +180,25 @@ static void menu_input()
 	{
 		if (e.type == SDL_KEYDOWN)
 		{
-			if (e.key.keysym.sym == SDLK_SPACE)
-			{
-				if (state == PAUSED)
-				{
-					Mix_ResumeMusic();
-					menu_set_play();
-					update_delta_time();
-					state = PLAYING;
-					continue;
-				}
+			//if (e.key.keysym.sym == SDLK_SPACE)
+			//{
+			//	if (state == PAUSED)
+			//	{
+			//		Mix_ResumeMusic();
+			//		menu_set_play();
+			//		update_delta_time();
+			//		state = PLAYING;
+			//		continue;
+			//	}
 
-				level_load(level, 0);
-				Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
-				//Mix_PlayMusic(music, 0);
-				menu_set_play();
-				update_delta_time();
-				state = PLAYING;
-			}
-			else if (e.key.keysym.sym == SDLK_ESCAPE)
+			//	level_load(level, 0);
+			//	Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
+			//	//Mix_PlayMusic(music, 0);
+			//	menu_set_play();
+			//	update_delta_time();
+			//	state = PLAYING;
+			//}
+			if (e.key.keysym.sym == SDLK_ESCAPE)
 			{
 				if (state == PAUSED)
 				{
@@ -212,8 +212,11 @@ static void menu_input()
 					score_miss_reset();
 					continue;
 				}
-
-				quit = TRUE;
+				else if (state == LEVEL_SELECT)
+				{
+					state = MAIN_MENU;
+				}
+				else quit = TRUE;
 			}
 		}
 		else if (e.type == SDL_MOUSEBUTTONUP)
@@ -257,30 +260,35 @@ static void menu_input()
 			{
 				if (button == 0)
 				{
-					music = Mix_LoadMUS("TH.wav");
+					level_load(level, button);
+
+					printf("loading music: %s\n", song_names[button]);
+					printf("song name length: %zd\n\n", strlen(song_names[button]));
+					music = Mix_LoadMUS(song_names[button]);
 					if (music == NULL)
 					{
-						printf("music couldn't be loaded");
-						exit(1);
+						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
+						//exit(1);
 					}
 
-					level_load(level, 0);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
-					printf("music pos playing: %f\n\n", Mix_GetMusicPosition(music));
 					menu_set_play();
 					update_delta_time();
 					state = PLAYING;
 				}
 				else if (button == 1)
 				{
-					music = Mix_LoadMUS("lamb.wav");
+					level_load(level, button);
+
+					printf("loading music: %s\n", song_names[button]);
+					printf("song name length: %zd\n\n", strlen(song_names[button]));
+					music = Mix_LoadMUS(song_names[button]);
 					if (music == NULL)
 					{
-						printf("music couldn't be loaded");
-						exit(1);
+						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
+						//exit(1);
 					}
 
-					level_load(level, 1);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 					menu_set_play();
 					update_delta_time();
@@ -288,14 +296,17 @@ static void menu_input()
 				}
 				else if (button == 2)
 				{
-					music = Mix_LoadMUS("sert.wav");
+					level_load(level, button);
+
+					printf("loading music: %s\n", song_names[button]);
+					printf("song name length: %zd\n\n", strlen(song_names[button]));
+					music = Mix_LoadMUS(song_names[button]);
 					if (music == NULL)
 					{
-						printf("music couldn't be loaded");
-						exit(1);
+						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
+						//exit(1);
 					}
 
-					level_load(level, 2);
 					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
 					menu_set_play();
 					update_delta_time();
