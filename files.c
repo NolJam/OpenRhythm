@@ -80,6 +80,8 @@ int files_get_levels(char** level_names)
 		i++;
 	}
 
+	g_num_levels = i;
+
 	printf("First Pre Returned Level Name: %s\n\n", level_names[0]);
 
 	FindClose(hFind);

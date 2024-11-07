@@ -58,6 +58,8 @@ void menu_set_play(); // set cur menu to play_menu
 
 void menu_update_score(int s);
 
+void menu_move_levels(int y);
+
 void menu_quit();
 
 #endif

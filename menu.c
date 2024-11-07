@@ -78,29 +78,29 @@ void menu_init(SDL_Renderer* renderer)
 		.text_texture = NULL,
 	};
 
-	level1 = (MenuItem){
-		.rect = (SDL_Rect){ 100, 50, 300, 100 },
-		.text = "LEVEL 1",
-		.letters = NULL,
-		.num_letters = 6,
-		.text_texture = NULL,
-	};
+	//level1 = (MenuItem){
+	//	.rect = (SDL_Rect){ 100, 50, 300, 100 },
+	//	.text = "LEVEL 1",
+	//	.letters = NULL,
+	//	.num_letters = 6,
+	//	.text_texture = NULL,
+	//};
 
-	level2 = (MenuItem){
-		.rect = (SDL_Rect){ 100, 200, 300, 100 },
-		.text = "LEVEL 2",
-		.letters = NULL,
-		.num_letters = 6,
-		.text_texture = NULL,
-	};
+	//level2 = (MenuItem){
+	//	.rect = (SDL_Rect){ 100, 200, 300, 100 },
+	//	.text = "LEVEL 2",
+	//	.letters = NULL,
+	//	.num_letters = 6,
+	//	.text_texture = NULL,
+	//};
 
-	level3 = (MenuItem){
-		.rect = (SDL_Rect){ 100, 350, 300, 100 },
-		.text = "LEVEL 3",
-		.letters = NULL,
-		.num_letters = 6,
-		.text_texture = NULL,
-	};
+	//level3 = (MenuItem){
+	//	.rect = (SDL_Rect){ 100, 350, 300, 100 },
+	//	.text = "LEVEL 3",
+	//	.letters = NULL,
+	//	.num_letters = 6,
+	//	.text_texture = NULL,
+	//};
 
 	score_header = (MenuItem){
 		.rect = (SDL_Rect){ 10, 10, 300, 75 },
@@ -132,7 +132,7 @@ void menu_init(SDL_Renderer* renderer)
 
 	level_menu = (Menu){
 		.menu_items = NULL,
-		.num_menu_items = 3,
+		.num_menu_items = 0,
 		.bkg_texture = NULL,
 	};
 
@@ -190,26 +190,43 @@ void menu_init(SDL_Renderer* renderer)
 	// LEVEL MENU
 	//level1.letters = malloc(sizeof(Letter));
 	//level1.letters = map_letter_coords(level1.text, level1.letters);
-	level1.text_texture = text_create_texture(level_names[0]);
-	level1.text_width = text_get_width();
-	level1.text_height = text_get_height();
+	//level1.text_texture = text_create_texture(level_names[0]);
+	//level1.text_width = text_get_width();
+	//level1.text_height = text_get_height();
 
 	//level2.letters = malloc(sizeof(Letter));
 	//level2.letters = map_letter_coords(level2.text, level2.letters);
-	level2.text_texture = text_create_texture(level_names[1]);
-	level2.text_width = text_get_width();
-	level2.text_height = text_get_height();
+	//level2.text_texture = text_create_texture(level_names[1]);
+	//level2.text_width = text_get_width();
+	//level2.text_height = text_get_height();
 
 	//level3.letters = malloc(sizeof(Letter));
 	//level3.letters = map_letter_coords(level3.text, level3.letters);
-	level3.text_texture = text_create_texture(level_names[2]);
-	level3.text_width = text_get_width();
-	level3.text_height = text_get_height();
+	//level3.text_texture = text_create_texture(level_names[2]);
+	//level3.text_width = text_get_width();
+	//level3.text_height = text_get_height();
 
-	level_menu.menu_items = malloc((size_t)3 * sizeof(MenuItem));
-	level_menu.menu_items[0] = level1;
-	level_menu.menu_items[1] = level2;
-	level_menu.menu_items[2] = level3;
+	level_menu.menu_items = malloc((size_t)MAX_LEVELS * sizeof(MenuItem));
+
+	int y = 50;
+	for (int i = 0; i < g_num_levels; i++)
+	{
+		level_menu.menu_items[i] = (MenuItem){
+			.rect = (SDL_Rect){ 100, y, 300, 100 },
+			.text = level_names[i],
+		};
+
+		level_menu.menu_items[i].text_texture = text_create_texture(level_menu.menu_items[i].text);
+		level_menu.menu_items[i].text_width = text_get_width();
+		level_menu.menu_items[i].text_height = text_get_height();
+
+		level_menu.num_menu_items++;
+
+		y += 150;
+	}
+	//level_menu.menu_items[0] = level1;
+	//level_menu.menu_items[1] = level2;
+	//level_menu.menu_items[2] = level3;
 
 	// PLAY MENU
 	//score_header.letters = malloc(sizeof(Letter));
@@ -348,6 +365,17 @@ void menu_update_score(int s)
 	play_menu.menu_items[1] = score_display; // TODO: MAKE MENUS STORE POINTERS TO MENU ITEMS INSTEAD OF COPIES
 }
 
+void menu_move_levels(int y)
+{
+	if (level_menu.menu_items[0].rect.y >= 50 && y > 0) return;
+	if (level_menu.menu_items[0].rect.y <= -50 * g_num_levels && y < 0) return;
+
+	for (int i = 0; i < g_num_levels; i++)
+	{
+		level_menu.menu_items[i].rect.y += y * 35;
+	}
+}
+
 void menu_quit()
 {
 	free(play_button.letters);
@@ -362,14 +390,11 @@ void menu_quit()
 	free(exit_button.letters);
 	SDL_DestroyTexture(exit_button.text_texture);
 	
-	free(level1.letters);
-	SDL_DestroyTexture(level1.text_texture);
-	
-	free(level2.letters);
-	SDL_DestroyTexture(level2.text_texture);
-	
-	free(level3.letters);
-	SDL_DestroyTexture(level3.text_texture);
+	for (int i = 0; i < g_num_levels; i++)
+	{
+		free(level_menu.menu_items[i].letters);
+		SDL_DestroyTexture(level_menu.menu_items[i].text_texture);
+	}
 	
 	free(score_header.letters);
 	SDL_DestroyTexture(score_header.text_texture);

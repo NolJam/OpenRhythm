@@ -10,7 +10,7 @@
 #define LOGICAL_WIDTH 1024
 #define LOGICAL_HEIGHT 576
 
-#define MAX_LEVELS 10
+#define MAX_LEVELS 100
 
 #include <SDL.h>
 //#include <SDL_image.h>
@@ -19,6 +19,8 @@ extern SDL_Renderer* renderer;
 
 extern char** level_names;
 extern char** song_names;
+
+extern int g_num_levels;
 
 typedef enum GameState {
 	PLAYING,

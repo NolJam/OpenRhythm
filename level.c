@@ -10,6 +10,8 @@ const char* SONG_NAME_FORMAT = "s %s\n";
 char** level_names = NULL;
 char** song_names = NULL;
 
+int g_num_levels = 0;
+
 void level_init()
 {
 	level_names = malloc(sizeof(char*) * MAX_LEVELS);

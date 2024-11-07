@@ -215,6 +215,8 @@ static void menu_input()
 				else if (state == LEVEL_SELECT)
 				{
 					state = MAIN_MENU;
+					menu_set_main(renderer);
+					continue;
 				}
 				else quit = TRUE;
 			}
@@ -258,61 +260,26 @@ static void menu_input()
 			}
 			else if (state == LEVEL_SELECT)
 			{
-				if (button == 0)
+				level_load(level, button);
+
+				printf("loading music: %s\n", song_names[button]);
+				printf("song name length: %zd\n\n", strlen(song_names[button]));
+				music = Mix_LoadMUS(song_names[button]);
+				if (music == NULL)
 				{
-					level_load(level, button);
-
-					printf("loading music: %s\n", song_names[button]);
-					printf("song name length: %zd\n\n", strlen(song_names[button]));
-					music = Mix_LoadMUS(song_names[button]);
-					if (music == NULL)
-					{
-						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
-						//exit(1);
-					}
-
-					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
-					menu_set_play();
-					update_delta_time();
-					state = PLAYING;
+					printf("music couldn't be loaded: %s\n\n", Mix_GetError());
+					//exit(1);
 				}
-				else if (button == 1)
-				{
-					level_load(level, button);
 
-					printf("loading music: %s\n", song_names[button]);
-					printf("song name length: %zd\n\n", strlen(song_names[button]));
-					music = Mix_LoadMUS(song_names[button]);
-					if (music == NULL)
-					{
-						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
-						//exit(1);
-					}
-
-					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
-					menu_set_play();
-					update_delta_time();
-					state = PLAYING;
-				}
-				else if (button == 2)
-				{
-					level_load(level, button);
-
-					printf("loading music: %s\n", song_names[button]);
-					printf("song name length: %zd\n\n", strlen(song_names[button]));
-					music = Mix_LoadMUS(song_names[button]);
-					if (music == NULL)
-					{
-						printf("music couldn't be loaded: %s\n\n", Mix_GetError());
-						//exit(1);
-					}
-
-					Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
-					menu_set_play();
-					update_delta_time();
-					state = PLAYING;
-				}
+				Mix_FadeInMusicPos(music, 0, 10, level->start_pos);
+				menu_set_play();
+				update_delta_time();
+				state = PLAYING;
 			}
+		}
+		else if (e.type == SDL_MOUSEWHEEL && state == LEVEL_SELECT)
+		{
+			menu_move_levels(e.wheel.y);
 		}
 		else if (e.type == SDL_WINDOWEVENT)
 		{
