@@ -246,6 +246,85 @@ void menu_init(SDL_Renderer* renderer)
 	play_menu.menu_items[1] = score_display;
 
 	//printf("sizeof MenuItem: %zu\n\n", sizeof(MenuItem));
+
+	menu_configure();
+}
+
+void menu_configure() // TODO: DO NOT DUPLICATE TEXTURES 
+{
+	FILE* file = fopen("menu.cfg", "r");
+	if (file == NULL)
+	{
+		printf("no menu cfg file\n\n");
+		return;
+	}
+
+	Menu* cur_menu = NULL;
+	int i = 0;
+	char line[512];
+
+	int j = 0;
+	char texture_paths[10][128];
+
+	while (fgets(line, sizeof(line), file))
+	{
+		if (strncmp("Main", line, 4) == 0)
+		{
+			printf("Now reading main menu cfg.\n\n");
+			cur_menu = &main_menu;
+			i = 0;
+		}
+		if (strncmp("Pause", line, 5) == 0)
+		{
+			printf("Now reading pause menu cfg.\n\n");
+			cur_menu = &pause_menu;
+			i = 0;
+		}
+		if (strncmp("Level", line, 5) == 0)
+		{
+			printf("Now reading level menu cfg.\n\n");
+			cur_menu = &level_menu;
+			i = 0;
+
+			char temp[128];
+			sscanf_s(line, "Level %s", temp, sizeof temp - 1);
+
+			SDL_Texture* tptr = IMG_LoadTexture(renderer, temp);
+			if (tptr != NULL)
+			{
+				for (int q = 0; q < g_num_levels; q++)
+				{
+					cur_menu->menu_items[q].button_texture = tptr;
+				}
+			}
+			else printf("button texture not found\n\n");
+		}
+		if (line[0] == 'i' && cur_menu != NULL && i < cur_menu->num_menu_items)
+		{
+			char temp[128];
+			sscanf_s(line, "i %d %d %d %d %s", &cur_menu->menu_items[i].rect.x, &cur_menu->menu_items[i].rect.y,
+				&cur_menu->menu_items[i].rect.w, &cur_menu->menu_items[i].rect.h, temp, sizeof temp - 1);
+			printf("menu item texture name: %s\n\n", temp);
+
+			for (int q = 0; q < 10; q++)
+			{
+				if (strcmp(temp, texture_paths[q]) != 0)
+				{
+					printf("new texture loaded\n\n");
+				}
+			}
+
+			SDL_Texture* tptr = IMG_LoadTexture(renderer, temp);
+			if (tptr != NULL) cur_menu->menu_items[i].button_texture = tptr;
+			else printf("button texture not found\n\n");
+
+			i++;
+		}
+	}
+
+	fclose(file);
+
+	return;
 }
 
 int menu_click(int x, int y)
@@ -295,19 +374,22 @@ void menu_render(SDL_Renderer* renderer)
 	if (renderer == NULL) return;
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	if (cur_menu != &play_menu) SDL_RenderClear(renderer);
+	if (cur_menu != &play_menu && cur_menu->bkg_texture == NULL) SDL_RenderClear(renderer);
 	//printf("menu rendering...\n");
 
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
 	for (int i = 0; i < cur_menu->num_menu_items; i++)
 	{
-		if (cur_menu != &play_menu) SDL_RenderDrawRect(renderer, &cur_menu->menu_items[i].rect);
+		if (cur_menu != &play_menu && cur_menu->menu_items[i].button_texture == NULL) SDL_RenderDrawRect(renderer, &cur_menu->menu_items[i].rect);
 
 		//menu_render_letters(renderer, &cur_menu->menu_items[i]);
 		//if (cur_menu->menu_items[i].text_texture == NULL) printf("text texture is NULL\n\n");
 		SDL_Rect temp_rect = (SDL_Rect){ cur_menu->menu_items[i].rect.x, cur_menu->menu_items[i].rect.y,
 			cur_menu->menu_items[i].text_width, cur_menu->menu_items[i].text_height };
+
+		if (cur_menu->menu_items[i].button_texture != NULL)
+			SDL_RenderCopy(renderer, cur_menu->menu_items[i].button_texture, NULL, &cur_menu->menu_items[i].rect);
 
 		int s = SDL_RenderCopy(renderer, cur_menu->menu_items[i].text_texture, NULL, &temp_rect);
 		if (s == -1) printf("Rendering error: %s\n", SDL_GetError());
