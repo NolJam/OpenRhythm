@@ -385,7 +385,8 @@ void menu_render(SDL_Renderer* renderer)
 
 		//menu_render_letters(renderer, &cur_menu->menu_items[i]);
 		//if (cur_menu->menu_items[i].text_texture == NULL) printf("text texture is NULL\n\n");
-		SDL_Rect temp_rect = (SDL_Rect){ cur_menu->menu_items[i].rect.x, cur_menu->menu_items[i].rect.y,
+		SDL_Rect temp_rect = (SDL_Rect){ cur_menu->menu_items[i].rect.x + (cur_menu->menu_items[i].rect.w * 0.5) - (cur_menu->menu_items[i].text_width * 0.5f),
+			cur_menu->menu_items[i].rect.y + (cur_menu->menu_items[i].rect.h * 0.5) - (cur_menu->menu_items[i].text_height * 0.5f),
 			cur_menu->menu_items[i].text_width, cur_menu->menu_items[i].text_height };
 
 		if (cur_menu->menu_items[i].button_texture != NULL)
